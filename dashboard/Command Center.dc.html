@@ -10,9 +10,11 @@
 <helmet>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    body { margin:0; background:#06080C; }
+    body { margin:0; background:#0B0708; }
+    [data-screen-label="Command Center"]{ --display:'Instrument Serif',serif; }
+    [data-screen-label="Command Center"][data-font="sans"]{ --display:'Hanken Grotesk','Sora',sans-serif; }
     ::selection { background:rgba(242,181,68,0.3); }
     ::-webkit-scrollbar { width:8px; height:8px; }
     ::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.12); border-radius:4px; }
@@ -27,14 +29,14 @@
     @keyframes ringPulse { 0%,100% { opacity:0.9; } 50% { opacity:0.4; } }
   </style>
 </helmet>
-<div data-screen-label="Command Center" style="min-height:100vh; min-width:1430px; font-family:'Sora',sans-serif; color:#EAE7DE; background:radial-gradient(1100px 520px at 16% -6%, rgba(242,181,68,0.075), transparent 62%), radial-gradient(950px 640px at 94% 112%, rgba(98,217,232,0.06), transparent 62%), radial-gradient(760px 540px at 72% 28%, rgba(184,155,255,0.045), transparent 60%), #06080C;">
+<div data-screen-label="Command Center" data-font="{{ fontMode }}" style="min-height:100vh; min-width:1430px; font-family:'Sora',sans-serif; color:#EAE7DE; background:radial-gradient(1100px 520px at 16% -6%, rgba(240,88,74,0.09), transparent 62%), radial-gradient(950px 640px at 94% 112%, rgba(98,217,232,0.06), transparent 62%), radial-gradient(760px 540px at 72% 28%, rgba(242,181,68,0.045), transparent 60%), #0B0708;">
 
   <!-- ============ HEADER ============ -->
   <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 26px; border-bottom:1px solid rgba(255,255,255,0.07);">
     <div style="display:flex; align-items:center; gap:12px;">
-      <div style="width:36px; height:36px; border-radius:10px; border:1px solid rgba(242,181,68,0.5); background:linear-gradient(140deg, rgba(242,181,68,0.18), rgba(242,181,68,0.02)); display:flex; align-items:center; justify-content:center; font-family:'Instrument Serif',serif; font-style:italic; font-size:22px; color:#F2B544; padding-bottom:6px; box-sizing:border-box;">”</div>
+      <div style="width:36px; height:36px; border-radius:10px; border:1px solid rgba(240,88,74,0.55); background:linear-gradient(140deg, rgba(240,88,74,0.2), rgba(240,88,74,0.02)); display:flex; align-items:center; justify-content:center; font-family:var(--display); font-style:italic; font-size:22px; color:#F0584A; padding-bottom:6px; box-sizing:border-box;">”</div>
       <div>
-        <div style="font-family:'Instrument Serif',serif; font-size:20px; letter-spacing:0.3px; line-height:1;">Wallet with Opinions</div>
+        <div style="font-family:var(--display); font-size:20px; letter-spacing:0.3px; line-height:1;">Wallet with Opinions</div>
         <div style="font:500 9px/1 'IBM Plex Mono',monospace; letter-spacing:2.6px; color:#6E6A60; margin-top:5px;">AGENTIC COMMAND CENTER</div>
       </div>
     </div>
@@ -44,11 +46,12 @@
         <span>BASE MAINNET · 8453</span>
       </div>
       <div style="display:flex; align-items:center; gap:6px; font:500 10px/1 'IBM Plex Mono',monospace; color:#9A9588; padding:8px 11px; border:1px solid rgba(255,255,255,0.09); border-radius:8px;">
-        <span style="width:7px; height:7px; border-radius:50%; background:#5CE0A1; display:inline-block; box-shadow:0 0 8px #5CE0A1; animation:dotPulse 2s ease-in-out infinite;"></span>
+        <span style="width:7px; height:7px; border-radius:50%; background:#62D9E8; display:inline-block; box-shadow:0 0 8px #62D9E8; animation:dotPulse 2s ease-in-out infinite;"></span>
         <span>1SHOT RELAYER · OPERATIONAL</span>
       </div>
       <div style="font:500 10px/1 'IBM Plex Mono',monospace; color:#F2B544; padding:8px 11px; border:1px solid rgba(242,181,68,0.3); border-radius:8px; background:rgba(242,181,68,0.05);">{{ budgetRemaining }} / 10.00 USDC · WK</div>
       <div style="font:500 10px/1 'IBM Plex Mono',monospace; color:#9A9588; padding:8px 11px; border:1px solid rgba(255,255,255,0.09); border-radius:8px;">0x8fA3…c21B</div>
+      <div onClick="{{ toggleFont }}" title="Toggle display font" style="font:500 10px/1 'IBM Plex Mono',monospace; letter-spacing:0.5px; color:#9A9588; padding:8px 11px; border:1px solid rgba(255,255,255,0.12); border-radius:8px; cursor:pointer; user-select:none; transition:all 0.2s;" style-hover="border-color:#F0584A; color:#F0584A;">{{ fontToggleLabel }}</div>
       <div onClick="{{ runDemo }}" style="{{ demoBtnStyle }}" style-hover="transform:translateY(-1px)">{{ demoLabel }}</div>
     </div>
   </div>
@@ -56,7 +59,7 @@
   <!-- ============ THE WALLET SAYS ============ -->
   <div style="padding:18px 28px 4px;">
     <div style="font:600 9px/1 'IBM Plex Mono',monospace; letter-spacing:2.6px; color:#6E6A60;">THE WALLET SAYS</div>
-    <div key="{{ voiceId }}" style="margin-top:8px; font-family:'Instrument Serif',serif; font-style:italic; font-size:26px; color:#E4DFD2; animation:fadeUp 0.55s ease both; max-width:1150px; text-wrap:pretty; line-height:1.25;">“{{ voice }}”</div>
+    <div key="{{ voiceId }}" style="margin-top:8px; font-family:var(--display); font-style:italic; font-size:26px; color:#E4DFD2; animation:fadeUp 0.55s ease both; max-width:1150px; text-wrap:pretty; line-height:1.25;">“{{ voice }}”</div>
   </div>
 
   <!-- ============ MAIN GRID ============ -->
@@ -70,37 +73,37 @@
           <div style="font:500 9px/1 'IBM Plex Mono',monospace; color:#5C5950;">5</div>
         </div>
         <div style="margin-top:13px; padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.05);">
-          <div style="font-family:'Instrument Serif',serif; font-style:italic; font-size:15px; color:#D9D4C8; line-height:1.35;">“Never spend more than $10 a week.”</div>
+          <div style="font-family:var(--display); font-style:italic; font-size:15px; color:#D9D4C8; line-height:1.35;">“Never spend more than $10 a week.”</div>
           <div style="display:flex; gap:6px; margin-top:7px; flex-wrap:wrap;">
-            <span style="font:600 8.5px/1 'IBM Plex Mono',monospace; letter-spacing:1px; padding:3px 6px; border-radius:4px; background:rgba(92,224,161,0.12); color:#5CE0A1;">HARD · ON-CHAIN</span>
+            <span style="font:600 8.5px/1 'IBM Plex Mono',monospace; letter-spacing:1px; padding:3px 6px; border-radius:4px; background:rgba(98,217,232,0.12); color:#62D9E8;">HARD · ON-CHAIN</span>
             <span style="font:500 8.5px/1 'IBM Plex Mono',monospace; padding:3px 6px; border-radius:4px; border:1px solid rgba(255,255,255,0.09); color:#79756A;">erc20PeriodTransfer</span>
           </div>
         </div>
         <div style="margin-top:12px; padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.05);">
-          <div style="font-family:'Instrument Serif',serif; font-style:italic; font-size:15px; color:#D9D4C8; line-height:1.35;">“No single action over $5.”</div>
+          <div style="font-family:var(--display); font-style:italic; font-size:15px; color:#D9D4C8; line-height:1.35;">“No single action over $5.”</div>
           <div style="display:flex; gap:6px; margin-top:7px; flex-wrap:wrap;">
-            <span style="font:600 8.5px/1 'IBM Plex Mono',monospace; letter-spacing:1px; padding:3px 6px; border-radius:4px; background:rgba(92,224,161,0.12); color:#5CE0A1;">HARD · ON-CHAIN</span>
+            <span style="font:600 8.5px/1 'IBM Plex Mono',monospace; letter-spacing:1px; padding:3px 6px; border-radius:4px; background:rgba(98,217,232,0.12); color:#62D9E8;">HARD · ON-CHAIN</span>
             <span style="font:500 8.5px/1 'IBM Plex Mono',monospace; padding:3px 6px; border-radius:4px; border:1px solid rgba(255,255,255,0.09); color:#79756A;">spendLimit</span>
           </div>
         </div>
         <div style="margin-top:12px; padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.05);">
-          <div style="font-family:'Instrument Serif',serif; font-style:italic; font-size:15px; color:#D9D4C8; line-height:1.35;">“Only pay services on my allowlist.”</div>
+          <div style="font-family:var(--display); font-style:italic; font-size:15px; color:#D9D4C8; line-height:1.35;">“Only pay services on my allowlist.”</div>
           <div style="display:flex; gap:6px; margin-top:7px; flex-wrap:wrap;">
-            <span style="font:600 8.5px/1 'IBM Plex Mono',monospace; letter-spacing:1px; padding:3px 6px; border-radius:4px; background:rgba(92,224,161,0.12); color:#5CE0A1;">HARD · ON-CHAIN</span>
+            <span style="font:600 8.5px/1 'IBM Plex Mono',monospace; letter-spacing:1px; padding:3px 6px; border-radius:4px; background:rgba(98,217,232,0.12); color:#62D9E8;">HARD · ON-CHAIN</span>
             <span style="font:500 8.5px/1 'IBM Plex Mono',monospace; padding:3px 6px; border-radius:4px; border:1px solid rgba(255,255,255,0.09); color:#79756A;">allowedTargets</span>
           </div>
         </div>
         <div style="margin-top:12px; padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.05);">
-          <div style="font-family:'Instrument Serif',serif; font-style:italic; font-size:15px; color:#D9D4C8; line-height:1.35;">“Prefer free sources before paid ones.”</div>
+          <div style="font-family:var(--display); font-style:italic; font-size:15px; color:#D9D4C8; line-height:1.35;">“Prefer free sources before paid ones.”</div>
           <div style="display:flex; gap:6px; margin-top:7px; flex-wrap:wrap;">
-            <span style="font:600 8.5px/1 'IBM Plex Mono',monospace; letter-spacing:1px; padding:3px 6px; border-radius:4px; background:rgba(184,155,255,0.12); color:#B89BFF;">SOFT · REASONED</span>
+            <span style="font:600 8.5px/1 'IBM Plex Mono',monospace; letter-spacing:1px; padding:3px 6px; border-radius:4px; background:rgba(242,181,68,0.12); color:#F2B544;">SOFT · REASONED</span>
             <span style="font:500 8.5px/1 'IBM Plex Mono',monospace; padding:3px 6px; border-radius:4px; border:1px solid rgba(255,255,255,0.09); color:#79756A;">governor prompt</span>
           </div>
         </div>
         <div style="margin-top:12px;">
-          <div style="font-family:'Instrument Serif',serif; font-style:italic; font-size:15px; color:#D9D4C8; line-height:1.35;">“Be skeptical of anything promising yield above 8%.”</div>
+          <div style="font-family:var(--display); font-style:italic; font-size:15px; color:#D9D4C8; line-height:1.35;">“Be skeptical of anything promising yield above 8%.”</div>
           <div style="display:flex; gap:6px; margin-top:7px; flex-wrap:wrap;">
-            <span style="font:600 8.5px/1 'IBM Plex Mono',monospace; letter-spacing:1px; padding:3px 6px; border-radius:4px; background:rgba(184,155,255,0.12); color:#B89BFF;">SOFT · REASONED</span>
+            <span style="font:600 8.5px/1 'IBM Plex Mono',monospace; letter-spacing:1px; padding:3px 6px; border-radius:4px; background:rgba(242,181,68,0.12); color:#F2B544;">SOFT · REASONED</span>
             <span style="font:500 8.5px/1 'IBM Plex Mono',monospace; padding:3px 6px; border-radius:4px; border:1px solid rgba(255,255,255,0.09); color:#79756A;">governor prompt</span>
           </div>
         </div>
@@ -121,7 +124,7 @@
             <div style="display:flex; justify-content:space-between; font:500 9.5px/1 'IBM Plex Mono',monospace;"><span style="color:#6E6A60;">PER-ACTION CAP</span><span style="color:#C9C4B6;">5.00</span></div>
             <div style="display:flex; justify-content:space-between; font:500 9.5px/1 'IBM Plex Mono',monospace;"><span style="color:#6E6A60;">RESETS IN</span><span style="color:#C9C4B6;">2D 14H</span></div>
             <div style="display:flex; justify-content:space-between; font:500 9.5px/1 'IBM Plex Mono',monospace;"><span style="color:#6E6A60;">x402 CALLS</span><span style="color:#62D9E8;">{{ x402Count }}</span></div>
-            <div style="display:flex; justify-content:space-between; font:500 9.5px/1 'IBM Plex Mono',monospace;"><span style="color:#6E6A60;">RELAYED TX</span><span style="color:#5CE0A1;">{{ txCount }}</span></div>
+            <div style="display:flex; justify-content:space-between; font:500 9.5px/1 'IBM Plex Mono',monospace;"><span style="color:#6E6A60;">RELAYED TX</span><span style="color:#62D9E8;">{{ txCount }}</span></div>
           </div>
         </div>
       </div>
@@ -146,8 +149,8 @@
             <div style="font:600 10px/1 'IBM Plex Mono',monospace; letter-spacing:2.4px; color:#9A9588;">◆ THE REDELEGATION CHAIN</div>
             <div style="font:500 9px/1.5 'IBM Plex Mono',monospace; color:#5C5950; margin-top:5px;">ERC-7710 · child ⊂ parent — enforced on-chain at redemption</div>
           </div>
-          <div style="display:flex; align-items:center; gap:6px; font:500 9.5px/1 'IBM Plex Mono',monospace; color:#5CE0A1;">
-            <span style="width:6px; height:6px; border-radius:50%; background:#5CE0A1; display:inline-block; animation:dotPulse 1.8s ease-in-out infinite;"></span>
+          <div style="display:flex; align-items:center; gap:6px; font:500 9.5px/1 'IBM Plex Mono',monospace; color:#62D9E8;">
+            <span style="width:6px; height:6px; border-radius:50%; background:#62D9E8; display:inline-block; animation:dotPulse 1.8s ease-in-out infinite;"></span>
             <span>DEPTH 2 · LIVE</span>
           </div>
         </div>
@@ -164,7 +167,7 @@
           <div style="position:absolute; left:194px; top:538px; font:500 8.5px/1.6 'IBM Plex Mono',monospace; color:#6E6A60; z-index:2;">REDELEGATION · text-only · $0</div>
 
           <!-- USER SA -->
-          <div onClick="{{ selectUser }}" style="position:absolute; left:190px; top:24px; width:280px; height:104px; box-sizing:border-box; padding:12px 14px; border:1px solid rgba(234,231,222,0.26); border-radius:12px; background:#0B0E14; cursor:pointer; z-index:2; transition:border-color 0.3s;" style-hover="border-color:rgba(234,231,222,0.6)">
+          <div onClick="{{ selectUser }}" style="position:absolute; left:190px; top:24px; width:280px; height:104px; box-sizing:border-box; padding:12px 14px; border:1px solid rgba(234,231,222,0.26); border-radius:12px; background:#120C0D; cursor:pointer; z-index:2; transition:border-color 0.3s;" style-hover="border-color:rgba(234,231,222,0.6)">
             <span style="{{ userRing }}"></span>
             <div style="display:flex; align-items:center; justify-content:space-between;">
               <div style="display:flex; align-items:center; gap:7px;">
@@ -189,11 +192,11 @@
           </div>
 
           <!-- GOVERNOR -->
-          <div onClick="{{ selectGovernor }}" style="position:absolute; left:190px; top:192px; width:280px; height:132px; box-sizing:border-box; padding:13px 14px; border:1px solid rgba(242,181,68,0.38); border-radius:12px; background:linear-gradient(180deg, rgba(242,181,68,0.06), rgba(11,14,20,0)) #0B0E14; cursor:pointer; z-index:2; transition:border-color 0.3s;" style-hover="border-color:rgba(242,181,68,0.8)">
+          <div onClick="{{ selectGovernor }}" style="position:absolute; left:190px; top:192px; width:280px; height:132px; box-sizing:border-box; padding:13px 14px; border:1px solid rgba(240,88,74,0.4); border-radius:12px; background:linear-gradient(180deg, rgba(240,88,74,0.07), rgba(11,14,20,0)) #120C0D; cursor:pointer; z-index:2; transition:border-color 0.3s;" style-hover="border-color:rgba(240,88,74,0.85)">
             <span style="{{ govRing }}"></span>
             <div style="display:flex; align-items:center; justify-content:space-between;">
               <div style="display:flex; align-items:center; gap:7px;">
-                <span style="color:#F2B544; font-size:10px;">◆</span>
+                <span style="color:#F0584A; font-size:10px;">◆</span>
                 <span style="font:600 11.5px/1 'IBM Plex Mono',monospace; letter-spacing:1.6px; color:#EAE7DE;">GOVERNOR</span>
                 <span style="font:500 8.5px/1 'IBM Plex Mono',monospace; color:#5C5950;">EXECUTIVE</span>
               </div>
@@ -215,7 +218,7 @@
           </div>
 
           <!-- RESEARCHER -->
-          <div onClick="{{ selectResearcher }}" style="position:absolute; left:40px; top:400px; width:280px; height:124px; box-sizing:border-box; padding:13px 14px; border:1px solid rgba(98,217,232,0.32); border-radius:12px; background:linear-gradient(180deg, rgba(98,217,232,0.05), rgba(11,14,20,0)) #0B0E14; cursor:pointer; z-index:2; transition:border-color 0.3s;" style-hover="border-color:rgba(98,217,232,0.75)">
+          <div onClick="{{ selectResearcher }}" style="position:absolute; left:40px; top:400px; width:280px; height:124px; box-sizing:border-box; padding:13px 14px; border:1px solid rgba(98,217,232,0.32); border-radius:12px; background:linear-gradient(180deg, rgba(98,217,232,0.05), rgba(11,14,20,0)) #120C0D; cursor:pointer; z-index:2; transition:border-color 0.3s;" style-hover="border-color:rgba(98,217,232,0.75)">
             <span style="{{ resRing }}"></span>
             <div style="display:flex; align-items:center; justify-content:space-between;">
               <div style="display:flex; align-items:center; gap:7px;">
@@ -250,11 +253,11 @@
           </div>
 
           <!-- SUMMARIZER -->
-          <div onClick="{{ selectSummarizer }}" style="position:absolute; left:40px; top:584px; width:280px; height:108px; box-sizing:border-box; padding:13px 14px; border:1px solid rgba(184,155,255,0.3); border-radius:12px; background:linear-gradient(180deg, rgba(184,155,255,0.05), rgba(11,14,20,0)) #0B0E14; cursor:pointer; z-index:2; transition:border-color 0.3s;" style-hover="border-color:rgba(184,155,255,0.75)">
+          <div onClick="{{ selectSummarizer }}" style="position:absolute; left:40px; top:584px; width:280px; height:108px; box-sizing:border-box; padding:13px 14px; border:1px solid rgba(242,181,68,0.3); border-radius:12px; background:linear-gradient(180deg, rgba(242,181,68,0.05), rgba(11,14,20,0)) #120C0D; cursor:pointer; z-index:2; transition:border-color 0.3s;" style-hover="border-color:rgba(242,181,68,0.75)">
             <span style="{{ sumRing }}"></span>
             <div style="display:flex; align-items:center; justify-content:space-between;">
               <div style="display:flex; align-items:center; gap:7px;">
-                <span style="color:#B89BFF; font-size:10px;">◈</span>
+                <span style="color:#F2B544; font-size:10px;">◈</span>
                 <span style="font:600 11.5px/1 'IBM Plex Mono',monospace; letter-spacing:1.6px; color:#EAE7DE;">SUMMARIZER</span>
                 <span style="font:500 8.5px/1 'IBM Plex Mono',monospace; color:#5C5950;">LEAF</span>
               </div>
@@ -265,7 +268,7 @@
             </div>
             <div style="margin-top:7px; font:500 9.5px/1 'IBM Plex Mono',monospace; color:#5C5950;">0x2F61…E3c9 · text in → ≤ 500 tokens out</div>
             <div style="margin-top:11px; display:flex; align-items:center; gap:8px;">
-              <div style="flex:1; height:4px; border-radius:2px; background:rgba(255,255,255,0.07);"><div style="width:8%; height:4px; border-radius:2px; background:#B89BFF;"></div></div>
+              <div style="flex:1; height:4px; border-radius:2px; background:rgba(255,255,255,0.07);"><div style="width:8%; height:4px; border-radius:2px; background:#F2B544;"></div></div>
               <span style="font:600 8.5px/1 'IBM Plex Mono',monospace; color:#79756A;">8% AUTHORITY</span>
             </div>
             <div style="margin-top:9px; display:flex; gap:5px;">
@@ -292,7 +295,7 @@
               <div style="display:flex; justify-content:space-between; font:500 10px/1.4 'IBM Plex Mono',monospace;"><span style="color:#6E6A60;">BUDGET</span><span style="color:#F2B544;">{{ selBudget }}</span></div>
               <div style="margin-top:6px; display:flex; flex-direction:column; gap:6px;">
                 <sc-for list="{{ selChecks }}" as="c" hint-placeholder-count="2">
-                  <div style="font:500 9.5px/1.5 'IBM Plex Mono',monospace; color:#8FD9C9;"><span style="color:#5CE0A1;">✓</span> {{ c }}</div>
+                  <div style="font:500 9.5px/1.5 'IBM Plex Mono',monospace; color:#8FD9C9;"><span style="color:#62D9E8;">✓</span> {{ c }}</div>
                 </sc-for>
               </div>
             </div>
@@ -380,24 +383,24 @@
           <div style="display:flex; align-items:center; gap:11px;">
             <div style="width:32px; height:32px; border-radius:9px; border:1px solid rgba(242,181,68,0.5); display:flex; align-items:center; justify-content:center; color:#F2B544; font-size:15px;">⌖</div>
             <div>
-              <div style="font-family:'Instrument Serif',serif; font-size:22px; line-height:1;">ClearSign</div>
+              <div style="font-family:var(--display); font-size:22px; line-height:1;">ClearSign</div>
               <div style="font:500 8.5px/1 'IBM Plex Mono',monospace; letter-spacing:2.2px; color:#6E6A60; margin-top:5px;">WHAT YOU SIGN IS WHAT YOU SEE</div>
             </div>
           </div>
-          <div style="font:600 9px/1.5 'IBM Plex Mono',monospace; letter-spacing:0.8px; color:#FF8FA3; border:1px solid rgba(255,143,163,0.35); background:rgba(255,143,163,0.07); padding:7px 10px; border-radius:7px; max-width:300px; text-align:right;">{{ clearTrigger }}</div>
+          <div style="font:600 9px/1.5 'IBM Plex Mono',monospace; letter-spacing:0.8px; color:#F0584A; border:1px solid rgba(240,88,74,0.35); background:rgba(240,88,74,0.07); padding:7px 10px; border-radius:7px; max-width:300px; text-align:right;">{{ clearTrigger }}</div>
         </div>
-        <div style="margin-top:18px; font-family:'Instrument Serif',serif; font-style:italic; font-size:27px; line-height:1.3; color:#EFEAE0; text-wrap:pretty;">“{{ clearTitle }}”</div>
+        <div style="margin-top:18px; font-family:var(--display); font-style:italic; font-size:27px; line-height:1.3; color:#EFEAE0; text-wrap:pretty;">“{{ clearTitle }}”</div>
         <div style="margin-top:18px; display:grid; grid-template-columns:1fr 1fr; gap:14px;">
-          <div style="border:1px solid rgba(92,224,161,0.25); background:rgba(92,224,161,0.04); border-radius:10px; padding:12px 14px;">
-            <div style="font:600 9px/1 'IBM Plex Mono',monospace; letter-spacing:1.8px; color:#5CE0A1;">ENFORCED ON-CHAIN</div>
+          <div style="border:1px solid rgba(98,217,232,0.25); background:rgba(98,217,232,0.04); border-radius:10px; padding:12px 14px;">
+            <div style="font:600 9px/1 'IBM Plex Mono',monospace; letter-spacing:1.8px; color:#62D9E8;">ENFORCED ON-CHAIN</div>
             <sc-for list="{{ clearEnforced }}" as="c" hint-placeholder-count="4">
-              <div style="display:flex; gap:7px; margin-top:8px; font:500 10px/1.5 'IBM Plex Mono',monospace; color:#B9E6CF;"><span style="color:#5CE0A1;">✓</span><span>{{ c }}</span></div>
+              <div style="display:flex; gap:7px; margin-top:8px; font:500 10px/1.5 'IBM Plex Mono',monospace; color:#B9E6CF;"><span style="color:#62D9E8;">✓</span><span>{{ c }}</span></div>
             </sc-for>
           </div>
-          <div style="border:1px solid rgba(184,155,255,0.22); background:rgba(184,155,255,0.04); border-radius:10px; padding:12px 14px;">
-            <div style="font:600 9px/1 'IBM Plex Mono',monospace; letter-spacing:1.8px; color:#B89BFF;">REASONED · NOT ON-CHAIN</div>
+          <div style="border:1px solid rgba(242,181,68,0.22); background:rgba(242,181,68,0.04); border-radius:10px; padding:12px 14px;">
+            <div style="font:600 9px/1 'IBM Plex Mono',monospace; letter-spacing:1.8px; color:#F2B544;">REASONED · NOT ON-CHAIN</div>
             <sc-for list="{{ clearSoft }}" as="c" hint-placeholder-count="2">
-              <div style="display:flex; gap:7px; margin-top:8px; font:500 10px/1.5 'IBM Plex Mono',monospace; color:#CFC5EC;"><span style="color:#B89BFF;">↺</span><span>{{ c }}</span></div>
+              <div style="display:flex; gap:7px; margin-top:8px; font:500 10px/1.5 'IBM Plex Mono',monospace; color:#CFC5EC;"><span style="color:#F2B544;">↺</span><span>{{ c }}</span></div>
             </sc-for>
           </div>
         </div>
@@ -414,7 +417,7 @@
           </div>
           <div style="display:flex; gap:9px; align-items:center;">
             <div onClick="{{ editRules }}" style="cursor:pointer; font:500 11px/1 'Sora',sans-serif; color:#79756A; padding:11px 8px; transition:color 0.2s;" style-hover="color:#EAE7DE;">Edit rules</div>
-            <div onClick="{{ override }}" style="cursor:pointer; font:600 11.5px/1 'Sora',sans-serif; color:#EAE7DE; padding:11px 16px; border:1px solid rgba(255,255,255,0.18); border-radius:9px; transition:all 0.2s;" style-hover="border-color:rgba(255,143,163,0.6); color:#FF8FA3;">Override</div>
+            <div onClick="{{ override }}" style="cursor:pointer; font:600 11.5px/1 'Sora',sans-serif; color:#EAE7DE; padding:11px 16px; border:1px solid rgba(255,255,255,0.18); border-radius:9px; transition:all 0.2s;" style-hover="border-color:rgba(240,88,74,0.6); color:#F0584A;">Override</div>
             <div onClick="{{ proceed }}" style="cursor:pointer; font:600 11.5px/1 'Sora',sans-serif; color:#0B0E15; padding:12px 20px; background:#F2B544; border-radius:9px; box-shadow:0 4px 24px rgba(242,181,68,0.25); transition:background 0.2s;" style-hover="background:#FFC85E;">Proceed — sign once</div>
           </div>
         </div>
@@ -425,7 +428,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  COLORS = { USER:'#EAE7DE', GOVERNOR:'#F2B544', RESEARCHER:'#62D9E8', SUMMARIZER:'#B89BFF', RELAYER:'#5CE0A1', CLEARSIGN:'#FF8FA3' };
+  COLORS = { USER:'#EAE7DE', GOVERNOR:'#F0584A', RESEARCHER:'#62D9E8', SUMMARIZER:'#F2B544', RELAYER:'#62D9E8', CLEARSIGN:'#F0584A' };
   PATHS = { ug:'M330,128 L330,192', gr:'M330,324 C330,364 180,358 180,400', gx:'M330,324 C330,360 500,356 500,400', rs:'M180,524 L180,584' };
   VOICES = [
     "I'm watching Base. Nothing worth your money has happened in 41 minutes.",
@@ -438,6 +441,7 @@ class Component extends DCLogic {
     budgetSpent: 3.30, weekBudget: 10, x402Count: 47, txCount: 12,
     voice: "I'm watching Base. Nothing worth your money has happened in 41 minutes.",
     voiceId: 0,
+    fontMode: 'serif',
     agents: {
       user:       { status: 'HOLDING BUDGET', tone: 'idle' },
       governor:   { status: 'MONITORING',     tone: 'active' },
@@ -517,7 +521,7 @@ class Component extends DCLogic {
       this.t(2400, () => this.setAgent('researcher', 'IDLE', 'idle'));
     } else if (i === 2) {
       this.setAgent('summarizer', 'COMPRESSING', 'active');
-      this.pulse('rs', '#B89BFF');
+      this.pulse('rs', '#F2B544');
       this.t(1100, () => this.addLog('SUMMARIZER', 'OUTPUT', 'context pruned · memory digest updated'));
       this.t(2600, () => this.setAgent('summarizer', 'IDLE', 'idle'));
     } else {
@@ -554,7 +558,7 @@ class Component extends DCLogic {
       this.think('researcher', 'pools: 38 → filter TVL>$2M → 7 candidates → wstETH/USDC 6.1% · cbETH 4.8% · superOETH 7.9% (verify) → free data ends at 30d');
     });
     this.t(10600, () => {
-      this.pulse('rs', '#B89BFF');
+      this.pulse('rs', '#F2B544');
       this.addLog('RESEARCHER', 'REDELEGATE', '→ summarizer · text-only · budget 0 · depth 2 (leaf)', { hash: '0x8d20…44b7' });
       this.setAgent('summarizer', 'COMPRESSING', 'active');
     });
@@ -609,7 +613,7 @@ class Component extends DCLogic {
       const spent = +(this.state.budgetSpent + 4.84).toFixed(2);
       const rem = (this.state.weekBudget - spent).toFixed(2);
       this.setState((s) => ({ budgetSpent: spent, txCount: s.txCount + 1, demoRunning: false }));
-      this.pulse('ug', '#5CE0A1');
+      this.pulse('ug', '#62D9E8');
       this.addLog('RELAYER', 'CONFIRMED', '4.80 USDC → data.dexmetrics.xyz · fee 0.04 · webhook ✓ Ed25519', { hash: '0x4c9e…b21d', cost: '4.84' });
       this.setAgent('governor', 'MONITORING', 'active');
       this.t(900, () => this.say('Done. ' + rem + ' USDC left this week — I\'ll be frugal. The report is parsing into memory now.'));
@@ -697,7 +701,7 @@ class Component extends DCLogic {
       };
       if (s.relay.active) {
         const done = i < s.relay.step || (i === 4 && s.relay.step === 4);
-        if (done) { st.color = '#5CE0A1'; st.border = '1px solid rgba(92,224,161,0.35)'; st.background = 'rgba(92,224,161,0.06)'; }
+        if (done) { st.color = '#62D9E8'; st.border = '1px solid rgba(98,217,232,0.35)'; st.background = 'rgba(98,217,232,0.06)'; }
         else if (i === s.relay.step) { st.color = '#F2B544'; st.border = '1px solid rgba(242,181,68,0.5)'; st.background = 'rgba(242,181,68,0.08)'; st.animation = 'stepBlink 1s ease-in-out infinite'; }
       }
       return { label: label, style: st, sep: i < 4 ? '→' : '' };
@@ -710,7 +714,7 @@ class Component extends DCLogic {
         : 'confirmed · webhook verified (Ed25519 vs JWKS) · fee ' + s.relay.fee + ' USDC settled');
 
     // ---- venice stream ----
-    const AC = { governor: '#F2B544', researcher: '#62D9E8', summarizer: '#B89BFF' };
+    const AC = { governor: '#F0584A', researcher: '#62D9E8', summarizer: '#F2B544' };
     const thinkChip = s.thinkActor
       ? chip(AC[s.thinkActor] || '#9A9588')
       : Object.assign(chip('#79756A'), { background: 'rgba(255,255,255,0.06)', color: '#79756A' });
@@ -728,7 +732,7 @@ class Component extends DCLogic {
 
     // ---- selected detail ----
     const rem = (s.weekBudget - s.budgetSpent).toFixed(2);
-    const KCOL = { HARD: '#5CE0A1', SOFT: '#B89BFF', CHAIN: '#F2B544', ROOT: '#C9C4B6' };
+    const KCOL = { HARD: '#62D9E8', SOFT: '#F2B544', CHAIN: '#F2B544', ROOT: '#C9C4B6' };
     const INFO = {
       user: {
         name: 'USER SA', addr: '0x8fA3…c21B', parent: '— root of trust', scope: 'full account authority', budget: '120 USDC held',
@@ -787,6 +791,7 @@ class Component extends DCLogic {
     return {
       // header
       runDemo: () => this.startDemo(),
+      fontMode: s.fontMode, toggleFont: () => this.setState((st) => ({ fontMode: st.fontMode === 'serif' ? 'sans' : 'serif' })), fontToggleLabel: s.fontMode === 'serif' ? 'Aa·SERIF' : 'Aa·SANS',
       demoLabel: s.demoRunning ? '◉ SCENARIO RUNNING…' : '▶ RUN DEMO SCENARIO',
       demoBtnStyle,
       budgetRemaining: rem,
@@ -801,10 +806,10 @@ class Component extends DCLogic {
       selectResearcher: () => this.setState({ selected: s.selected === 'researcher' ? null : 'researcher' }),
       selectSummarizer: () => this.setState({ selected: s.selected === 'summarizer' ? null : 'summarizer' }),
       closeSelect: () => this.setState({ selected: null }),
-      userRing: ring('user', '#EAE7DE'), govRing: ring('governor', '#F2B544'),
-      resRing: ring('researcher', '#62D9E8'), sumRing: ring('summarizer', '#B89BFF'),
-      userDotStyle: dot('user', '#EAE7DE'), govDotStyle: dot('governor', '#F2B544'),
-      resDotStyle: dot('researcher', '#62D9E8'), sumDotStyle: dot('summarizer', '#B89BFF'),
+      userRing: ring('user', '#EAE7DE'), govRing: ring('governor', '#F0584A'),
+      resRing: ring('researcher', '#62D9E8'), sumRing: ring('summarizer', '#F2B544'),
+      userDotStyle: dot('user', '#EAE7DE'), govDotStyle: dot('governor', '#F0584A'),
+      resDotStyle: dot('researcher', '#62D9E8'), sumDotStyle: dot('summarizer', '#F2B544'),
       userStatus: s.agents.user.status, govStatus: s.agents.governor.status,
       resStatus: s.agents.researcher.status, sumStatus: s.agents.summarizer.status,
       // detail
