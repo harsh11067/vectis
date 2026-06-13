@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { margin:0; background:#06080C; transition:background 0.5s ease; }
+    ::selection { background:rgba(242,181,68,0.3); }
+    ::-webkit-scrollbar { width:8px; height:8px; }
+    ::-webkit-scrollbar-thumb { background:rgba(140,140,140,0.28); border-radius:4px; }
+    ::-webkit-scrollbar-track { background:transparent; }
+
+    /* ── DARK (default) ── */
+    [data-app]{
+      --bg:#06080C; --surface:rgba(13,16,23,0.72); --surface-2:#0B0E14; --surface-3:#0B0E15;
+      --t-hi:#F0EBE0; --t-base:#EAE7DE; --t-quote:#E4DFD2; --t-strong:#C9C4B6; --t-body:#A8A398;
+      --t-muted:#9A9588; --t-dim:#79756A; --t-faint:#5C5950; --t-ghost:#46433D; --t-ghost2:#3F3C36;
+      --line:rgba(255,255,255,0.07); --line2:rgba(255,255,255,0.10); --line3:rgba(255,255,255,0.12); --line4:rgba(255,255,255,0.18);
+      --line-faint:rgba(255,255,255,0.015); --grid-dot:rgba(255,255,255,0.045);
+      --amber:#F2B544; --amber-hi:#FFC85E; --cyan:#62D9E8; --violet:#B89BFF; --green:#5CE0A1; --rose:#FF8FA3; --red:#FF6B6B; --blue:#5B8DEF; --venice:#93D8C6;
+      --user-line:rgba(234,231,222,0.26); --user-bar1:rgba(234,231,222,0.85); --user-bar2:rgba(234,231,222,0.35);
+      --glow:0.62; --panel-blur:saturate(1) blur(0px);
+      --hero-veil:radial-gradient(ellipse 60% 50% at 50% 46%, rgba(6,8,12,0.40), rgba(6,8,12,0.04) 55%, rgba(6,8,12,0.92) 100%);
+      --aura:radial-gradient(1100px 520px at 16% -6%, rgba(242,181,68,0.075), transparent 62%), radial-gradient(950px 640px at 94% 112%, rgba(98,217,232,0.06), transparent 62%), radial-gradient(760px 540px at 72% 28%, rgba(184,155,255,0.045), transparent 60%);
+    }
+    /* ── LIGHT ── */
+    [data-app][data-theme="light"]{
+      --bg:#ECE6D8; --surface:rgba(255,253,248,0.86); --surface-2:#FBF8F1; --surface-3:#FFFFFF;
+      --t-hi:#1C1813; --t-base:#272219; --t-quote:#332D22; --t-strong:#473F2E; --t-body:#5E5746;
+      --t-muted:#736B59; --t-dim:#8C8472; --t-faint:#A89F8B; --t-ghost:#BCB3A0; --t-ghost2:#C8BFAC;
+      --line:rgba(28,24,16,0.10); --line2:rgba(28,24,16,0.14); --line3:rgba(28,24,16,0.18); --line4:rgba(28,24,16,0.26);
+      --line-faint:rgba(28,24,16,0.022); --grid-dot:rgba(28,24,16,0.055);
+      --amber:#A66B08; --amber-hi:#C98A18; --cyan:#0C7585; --violet:#6A47CF; --green:#1C7F52; --rose:#BE3552; --red:#C13321; --blue:#2B57C9; --venice:#1F7A60;
+      --user-line:rgba(70,62,44,0.34); --user-bar1:rgba(70,62,44,0.82); --user-bar2:rgba(70,62,44,0.30);
+      --glow:0.14; --panel-blur:saturate(1.05) blur(0.5px);
+      --hero-veil:radial-gradient(ellipse 64% 54% at 50% 44%, rgba(236,230,216,0.18), rgba(236,230,216,0.02) 52%, rgba(236,230,216,0.94) 100%);
+      --aura:radial-gradient(1100px 520px at 16% -6%, rgba(166,107,8,0.10), transparent 60%), radial-gradient(950px 640px at 94% 112%, rgba(12,117,133,0.09), transparent 60%), radial-gradient(820px 560px at 74% 26%, rgba(106,71,207,0.07), transparent 58%);
+    }
+
+    @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes rise { from { opacity:0; transform:translateY(38px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes growY { from { transform:scaleY(0); } to { transform:scaleY(1); } }
+    @keyframes nudge { 0%,100% { transform:translateY(0); } 50% { transform:translateY(7px); } }
+    @keyframes pulseMove { from { offset-distance:0%; } to { offset-distance:100%; } }
+    @keyframes dotPulse { 0%,100% { opacity:1; } 50% { opacity:0.35; } }
+    @keyframes caretBlink { 0%,49% { opacity:1; } 50%,100% { opacity:0; } }
+    @keyframes stepBlink { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
+    @keyframes csIn { from { opacity:0; transform:scale(0.96) translateY(12px); } to { opacity:1; transform:scale(1) translateY(0); } }
+    @keyframes veilIn { from { opacity:0; } to { opacity:1; } }
+    @keyframes ringPulse { 0%,100% { opacity:0.9; } 50% { opacity:0.4; } }
+    @keyframes sheen { 0% { background-position:-180% 0; } 100% { background-position:280% 0; } }
+  </style>
+</helmet>
+<div data-app data-theme="{{ theme }}" style="position:relative; min-width:1430px; font-family:'Sora',sans-serif; color:var(--t-base);">
+  <div aria-hidden="true" style="position:fixed; inset:0; z-index:-1; background-color:var(--bg); background-image:var(--aura); transition:background-color 0.5s ease;"></div>
+
+  <!-- ════════════════ HERO ════════════════ -->
+  <div data-screen-label="Hero" style="position:relative; height:100vh; min-height:780px; overflow:hidden; display:flex; align-items:center; justify-content:center;">
+    <canvas ref="{{ heroCanvasRef }}" style="position:absolute; left:0; top:0; width:100%; height:100%;"></canvas>
+    <div style="position:absolute; inset:0; background:var(--hero-veil); pointer-events:none; transition:background 0.5s ease;"></div>
+
+    <div style="position:absolute; top:24px; left:28px; z-index:3; display:flex; align-items:center; gap:11px;">
+      <div style="width:34px; height:34px; border-radius:9px; border:1px solid rgba(242,181,68,0.5); background:rgba(242,181,68,0.08); display:flex; align-items:center; justify-content:center; font-family:'Instrument Serif',serif; font-style:italic; font-size:20px; color:var(--amber); padding-bottom:6px; box-sizing:border-box;">”</div>
+      <div style="font-family:'Instrument Serif',serif; font-size:18px;">Wallet with Opinions</div>
+    </div>
+    <div style="position:absolute; top:26px; right:28px; z-index:3; display:flex; align-items:center; gap:9px;">
+      <div onClick="{{ toggleTheme }}" title="Toggle theme" style="{{ themeToggleStyle }}" style-hover="border-color:var(--amber); color:var(--amber);">{{ themeToggleLabel }}</div>
+      <div style="display:flex; align-items:center; gap:6px; font:500 10px/1 'IBM Plex Mono',monospace; color:var(--t-muted); padding:8px 11px; border:1px solid var(--line2); border-radius:8px; background:var(--surface-2);">
+        <span style="width:7px; height:7px; border-radius:50%; background:var(--blue); display:inline-block;"></span>
+        <span>BASE MAINNET · 8453</span>
+      </div>
+    </div>
+
+    <div style="position:relative; z-index:2; max-width:1000px; text-align:center; padding:0 24px;">
+      <div style="font:600 10px/1 'IBM Plex Mono',monospace; letter-spacing:4px; color:var(--t-dim); animation:fadeUp 0.8s ease 0.1s both;">METAMASK SMART ACCOUNTS × VENICE AI × 1SHOT × BASE MAINNET</div>
+      <div style="margin-top:26px; font-family:'Instrument Serif',serif; font-size:82px; line-height:1.04; letter-spacing:-0.5px; color:var(--t-hi); animation:fadeUp 0.9s ease 0.25s both; text-wrap:balance;">The wallet that has <span style="font-style:italic; color:var(--amber);">something to say.</span></div>
+      <div style="margin:26px auto 0; max-width:680px; font-size:16.5px; line-height:1.65; color:var(--t-body); animation:fadeUp 0.9s ease 0.45s both; text-wrap:pretty;">Give it opinions, memory, and a budget — it stops being a vault and starts acting for you. Authority flows down a cryptographic chain where every link holds <span style="color:var(--t-quote);">less power than the one above it</span>, enforced on-chain, not by promise.</div>
+      <div style="margin-top:34px; display:flex; gap:12px; justify-content:center; animation:fadeUp 0.9s ease 0.65s both;">
+        <div onClick="{{ heroDemo }}" style="cursor:pointer; font:600 12px/1 'Sora',sans-serif; letter-spacing:0.4px; color:var(--surface-3); padding:15px 26px; background:var(--amber); border-radius:10px; box-shadow:0 6px 34px rgba(242,181,68,0.32); transition:all 0.25s;" style-hover="background:var(--amber-hi); transform:translateY(-2px)">▶ Watch it think</div>
+        <div onClick="{{ scrollDash }}" style="cursor:pointer; font:600 12px/1 'Sora',sans-serif; letter-spacing:0.4px; color:var(--t-base); padding:15px 26px; border:1px solid var(--line4); border-radius:10px; transition:all 0.25s;" style-hover="border-color:rgba(242,181,68,0.6); color:var(--amber);">Enter the command center ↓</div>
+      </div>
+      <div style="margin-top:38px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap; animation:fadeUp 0.9s ease 0.85s both;">
+        <span style="font:500 9.5px/1 'IBM Plex Mono',monospace; letter-spacing:1px; padding:7px 11px; border:1px solid var(--line2); border-radius:7px; color:var(--t-dim);">ERC-7710 · DEPTH-2 REDELEGATION</span>
+        <span style="font:500 9.5px/1 'IBM Plex Mono',monospace; letter-spacing:1px; padding:7px 11px; border:1px solid var(--line2); border-radius:7px; color:var(--t-dim);">x402 MICRO-PAYMENTS</span>
+        <span style="font:500 9.5px/1 'IBM Plex Mono',monospace; letter-spacing:1px; padding:7px 11px; border:1px solid var(--line2); border-radius:7px; color:var(--t-dim);">GASLESS · EIP-7702</span>
+        <span style="font:500 9.5px/1 'IBM Plex Mono',monospace; letter-spacing:1px; padding:7px 11px; border:1px solid var(--line2); border-radius:7px; color:var(--t-dim);">ZERO-RETENTION REASONING</span>
+      </div>
+    </div>
+
+    <div style="position:absolute; bottom:0; left:50%; transform:translateX(-50%); z-index:3; display:flex; flex-direction:column; align-items:center; gap:10px;">
+      <div style="font:600 9px/1 'IBM Plex Mono',monospace; letter-spacing:3px; color:var(--t-faint);">THE CHAIN BEGINS HERE</div>
+      <div style="color:var(--amber); font-size:14px; animation:nudge 1.8s ease-in-out infinite;">↓</div>
+      <div style="width:1px; height:74px; background:linear-gradient(180deg, rgba(242,181,68,0.7), rgba(242,181,68,0));"></div>
+    </div>
+  </div>
+
+  <!-- ════════════════ NARRATIVE (the thread) ════════════════ -->
+  <div style="position:relative; padding:110px 0 30px;">
+    <div style="position:absolute; left:50%; top:0; bottom:0; width:1px; margin-left:-0.5px; background:var(--line);"></div>
+    <div style="position:absolute; left:50%; top:0; bottom:0; width:1px; margin-left:-0.5px; background:linear-gradient(180deg, var(--amber), var(--cyan) 55%, var(--violet)); transform-origin:top; animation:growY 1.6s linear both; animation-timeline:view(); animation-range:entry 0% exit 60%; box-shadow:0 0 12px rgba(242,181,68,0.25);"></div>
+
+    <!-- S1 — WHAT YOU GIVE IT -->
+    <div data-screen-label="What It Is" style="position:relative; z-index:2;">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:14px; animation:rise 0.9s ease both; animation-timeline:view(); animation-range:entry 0% entry 50%;">
+        <div style="width:36px; height:36px; border-radius:50%; background:var(--surface-2); border:1px solid rgba(242,181,68,0.55); display:flex; align-items:center; justify-content:center; font:600 11px/1 'IBM Plex Mono',monospace; color:var(--amber); box-shadow:0 0 26px rgba(242,181,68,0.22);">01</div>
+        <div style="font:600 10px/1 'IBM Plex Mono',monospace; letter-spacing:3.5px; color:var(--t-dim);">WHAT YOU GIVE IT</div>
+        <div style="font-family:'Instrument Serif',serif; font-size:42px; color:var(--t-hi);">Opinions. Memory. Budget.</div>
+      </div>
+
+      <div style="max-width:1080px; margin:54px auto 0;">
+        <div style="display:grid; grid-template-columns:1fr 120px 1fr; align-items:center;">
+          <div style="justify-self:end; width:440px; background:var(--surface); border:1px solid rgba(242,181,68,0.22); border-radius:14px; padding:22px 24px; animation:rise 0.9s ease both; animation-timeline:view(); animation-range:entry 0% entry 55%;">
+            <div style="font:600 10px/1 'IBM Plex Mono',monospace; letter-spacing:2.5px; color:var(--amber);">◆ OPINIONS — RULES</div>
+            <div style="margin-top:12px; font-family:'Instrument Serif',serif; font-style:italic; font-size:21px; color:var(--t-quote); line-height:1.35;">“Never spend more than $10 a week. Be skeptical of anything promising yield above 8%.”</div>
+            <div style="margin-top:12px; font-size:13px; line-height:1.65; color:var(--t-body);">You write rules once, in plain English. Venice splits them in two: hard limits become <span style="color:var(--green);">on-chain caveats</span> the chain itself enforces; preferences become <span style="color:var(--violet);">reasoning guidance</span> the agent thinks with.</div>
+          </div>
+          <div style="display:flex; align-items:center;">
+            <div style="flex:1; height:1px; background:linear-gradient(90deg, rgba(242,181,68,0), rgba(242,181,68,0.45));"></div>
+            <div style="width:9px; height:9px; border-radius:50%; background:var(--amber); box-shadow:0 0 14px rgba(242,181,68,0.6);"></div>
+            <div style="flex:1;"></div>
+          </div>
+          <div></div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 120px 1fr; align-items:center; margin-top:46px;">
+          <div></div>
+          <div style="display:flex; align-items:center;">
+            <div style="flex:1;"></div>
+            <div style="width:9px; height:9px; border-radius:50%; background:var(--cyan); box-shadow:0 0 14px rgba(98,217,232,0.6);"></div>
+            <div style="flex:1; height:1px; background:linear-gradient(90deg, rgba(98,217,232,0.45), rgba(98,217,232,0));"></div>
+          </div>
+          <div style="justify-self:start; width:440px; background:var(--surface); border:1px solid rgba(98,217,232,0.22); border-radius:14px; padding:22px 24px; animation:rise 0.9s ease both; animation-timeline:view(); animation-range:entry 0% entry 55%;">
+            <div style="font:600 10px/1 'IBM Plex Mono',monospace; letter-spacing:2.5px; color:var(--cyan);">◇ MEMORY — THE AUDIT LOG</div>
+            <div style="margin-top:12px; font-family:'Instrument Serif',serif; font-style:italic; font-size:21px; color:var(--t-quote); line-height:1.35;">“I declined that farm at 12:15. Here's why, and here's the hash.”</div>
+            <div style="margin-top:12px; font-size:13px; line-height:1.65; color:var(--t-body);">Every action lands in a tamper-evident log — actor, reasoning, cost, tx hash, outcome. When an unsafe action is blocked, the <span style="color:var(--green);">blocking caveat is named on the record</span>. The wallet remembers why.</div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 120px 1fr; align-items:center; margin-top:46px;">
+          <div style="justify-self:end; width:440px; background:var(--surface); border:1px solid rgba(184,155,255,0.22); border-radius:14px; padding:22px 24px; animation:rise 0.9s ease both; animation-timeline:view(); animation-range:entry 0% entry 55%;">
+            <div style="font:600 10px/1 'IBM Plex Mono',monospace; letter-spacing:2.5px; color:var(--violet);">◈ BUDGET — DELEGATED ALLOWANCE</div>
+            <div style="margin-top:12px; font-family:'Instrument Serif',serif; font-style:italic; font-size:21px; color:var(--t-quote); line-height:1.35;">“It spends inside an allowance. It never holds your keys.”</div>
+            <div style="margin-top:12px; font-size:13px; line-height:1.65; color:var(--t-body);">A weekly USDC allowance delegated under ERC-7710. The Governor spends within it; sub-agents get <span style="color:var(--t-quote);">slices of slices</span> — 20% of remaining, then nothing at all. Settlement is gasless via the 1Shot relayer.</div>
+          </div>
+          <div style="display:flex; align-items:center;">
+            <div style="flex:1; height:1px; background:linear-gradient(90deg, rgba(184,155,255,0), rgba(184,155,255,0.45));"></div>
+            <div style="width:9px; height:9px; border-radius:50%; background:var(--violet); box-shadow:0 0 14px rgba(184,155,255,0.6);"></div>
+            <div style="flex:1;"></div>
+          </div>
+          <div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S2 — THREE PILLARS -->
+    <div data-screen-label="Pillars" style="position:relative; z-index:2; margin-top:150px;">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:14px; animation:rise 0.9s ease both; animation-timeline:view(); animation-range:entry 0% entry 50%;">
+        <div style="width:36px; height:36px; border-radius:50%; background:var(--surface-2); border:1px solid rgba(98,217,232,0.55); display:flex; align-items:center; justify-content:center; font:600 11px/1 'IBM Plex Mono',monospace; color:var(--cyan); box-shadow:0 0 26px rgba(98,217,232,0.22);">02</div>
+        <div style="font:600 10px/1 'IBM Plex Mono',monospace; letter-spacing:3.5px; color:var(--t-dim);">ONE PRIMITIVE, VIEWED THREE WAYS</div>
+        <div style="font-family:'Instrument Serif',serif; font-size:42px; color:var(--t-hi); max-width:760px; text-align:center; line-height:1.15;">The delegation engine is the policy, the log, <span style="font-style:italic; color:var(--cyan);">and the kill switch.</span></div>
+      </div>
+      <div style="display:flex; gap:16px; justify-content:center; margin-top:50px; animation:rise 0.9s ease both; animation-timeline:view(); animation-range:entry 0% entry 55%;">
+        <div style="width:348px; background:var(--surface); border:1px solid var(--line2); border-radius:14px; padding:22px 24px;">
+          <div style="font:600 22px/1 'IBM Plex Mono',monospace; color:var(--amber);">1</div>
+          <div style="margin-top:12px; font-family:'Instrument Serif',serif; font-size:21px; color:var(--t-hi);">Attenuated redelegation</div>
+          <div style="margin-top:9px; font-size:12.5px; line-height:1.65; color:var(--t-body);">Authority only ever shrinks downstream. A child agent can never spend more, reach further, or delegate wider than its parent — the invariant is checked on-chain at redemption, every hop.</div>
+          <div style="margin-top:13px; font:500 9px/1.6 'IBM Plex Mono',monospace; color:var(--t-faint);">South &amp; Pentland · arXiv:2501.09674</div>
+        </div>
+        <div style="width:348px; background:var(--surface); border:1px solid var(--line2); border-radius:14px; padding:22px 24px;">
+          <div style="font:600 22px/1 'IBM Plex Mono',monospace; color:var(--cyan);">2</div>
+          <div style="margin-top:12px; font-family:'Instrument Serif',serif; font-size:21px; color:var(--t-hi);">Policy + immutable audit log</div>
+          <div style="margin-top:9px; font-size:12.5px; line-height:1.65; color:var(--t-body);">An unsafe action doesn't get caught by a reviewer — it <span style="color:var(--rose);">reverts on-chain</span>, and the attempt is recorded with its reason and the blocking caveat named. Tamper-evident by construction.</div>
+          <div style="margin-top:13px; font:500 9px/1.6 'IBM Plex Mono',monospace; color:var(--t-faint);">arXiv:2509.07131 · arXiv:2507.08249</div>
+        </div>
+        <div style="width:348px; background:var(--surface); border:1px solid var(--line2); border-radius:14px; padding:22px 24px;">
+          <div style="font:600 22px/1 'IBM Plex Mono',monospace; color:var(--rose);">3</div>
+          <div style="margin-top:12px; font-family:'Instrument Serif',serif; font-size:21px; color:var(--t-hi);">Cascade revocation</div>
+          <div style="margin-top:9px; font-size:12.5px; line-height:1.65; color:var(--t-body);">Revoke the root and the entire subtree dies at once. A redemption that worked a minute ago now reverts — the kill switch isn't a feature bolted on, it's intrinsic to the chain.</div>
+          <div style="margin-top:13px; font:500 9px/1.6 'IBM Plex Mono',monospace; color:var(--t-faint);">arXiv:2507.08249 · kill switches for AI agents</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S3 — HOW A DECISION FLOWS -->
+    <div data-screen-label="Decision Flow" style="position:relative; z-index:2; margin-top:150px;">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:14px; animation:rise 0.9s ease both; animation-timeline:view(); animation-range:entry 0% entry 50%;">
+        <div style="width:36px; height:36px; border-radius:50%; background:var(--surface-2); border:1px solid rgba(184,155,255,0.55); display:flex; align-items:center; justify-content:center; font:600 11px/1 'IBM Plex Mono',monospace; color:var(--violet); box-shadow:0 0 26px rgba(184,155,255,0.22);">03</div>
+        <div style="font:600 10px/1 'IBM Plex Mono',monospace; letter-spacing:3.5px; color:var(--t-dim);">HOW A DECISION FLOWS</div>
+        <div style="font-family:'Instrument Serif',serif; font-size:42px; color:var(--t-hi);">Eight moves, every one on the record.</div>
+      </div>
+      <div style="display:flex; align-items:stretch; justify-content:center; gap:10px; margin-top:48px; flex-wrap:wrap; max-width:1260px; margin-left:auto; margin-right:auto; animation:rise 0.9s ease both; animation-timeline:view(); animation-range:entry 0% entry 55%;">
+        <div style="min-width:128px; display:flex; flex-direction:column; gap:6px; padding:15px 16px; border:1px solid rgba(242,181,68,0.4); border-radius:11px; background:var(--surface); text-align:center; box-shadow:0 0 24px rgba(242,181,68,0.06);">
+          <div style="font:700 14px/1 'IBM Plex Mono',monospace; letter-spacing:0.4px; color:var(--amber);">MONITOR</div>
+          <div style="font:500 10.5px/1.3 'IBM Plex Mono',monospace; color:var(--t-muted);">governor</div>
+        </div>
+        <div style="display:flex; align-items:center; color:var(--t-dim); font-size:15px;">→</div>
+        <div style="min-width:128px; display:flex; flex-direction:column; gap:6px; padding:15px 16px; border:1px solid rgba(98,217,232,0.4); border-radius:11px; background:var(--surface); text-align:center; box-shadow:0 0 24px rgba(98,217,232,0.06);">
+          <div style="font:700 14px/1 'IBM Plex Mono',monospace; letter-spacing:0.4px; color:var(--cyan);">REDELEGATE</div>
+          <div style="font:500 10.5px/1.3 'IBM Plex Mono',monospace; color:var(--t-muted);">scope ⊂ parent</div>
+        </div>
+        <div style="display:flex; align-items:center; color:var(--t-dim); font-size:15px;">→</div>
+        <div style="min-width:128px; display:flex; flex-direction:column; gap:6px; padding:15px 16px; border:1px solid rgba(98,217,232,0.4); border-radius:11px; background:var(--surface); text-align:center; box-shadow:0 0 24px rgba(98,217,232,0.06);">
+          <div style="font:700 14px/1 'IBM Plex Mono',monospace; letter-spacing:0.4px; color:var(--cyan);">x402 PAY</div>
+          <div style="font:500 10.5px/1.3 'IBM Plex Mono',monospace; color:var(--t-muted);">402 → 200</div>
+        </div>
+        <div style="display:flex; align-items:center; color:var(--t-dim); font-size:15px;">→</div>
+        <div style="min-width:128px; display:flex; flex-direction:column; gap:6px; padding:15px 16px; border:1px solid rgba(184,155,255,0.4); border-radius:11px; background:var(--surface); text-align:center; box-shadow:0 0 24px rgba(184,155,255,0.06);">
+          <div style="font:700 14px/1 'IBM Plex Mono',monospace; letter-spacing:0.4px; color:var(--violet);">SUMMARIZE</div>
+          <div style="font:500 10.5px/1.3 'IBM Plex Mono',monospace; color:var(--t-muted);">≤ 500 tokens</div>
+        </div>
+        <div style="display:flex; align-items:center; color:var(--t-dim); font-size:15px;">→</div>
+        <div style="min-width:128px; display:flex; flex-direction:column; gap:6px; padding:15px 16px; border:1px solid rgba(242,181,68,0.4); border-radius:11px; background:var(--surface); text-align:center; box-shadow:0 0 24px rgba(242,181,68,0.06);">
+          <div style="font:700 14px/1 'IBM Plex Mono',monospace; letter-spacing:0.4px; color:var(--amber);">REASON</div>
+          <div style="font:500 10.5px/1.3 'IBM Plex Mono',monospace; color:var(--t-muted);">venice · trace</div>
+        </div>
+        <div style="display:flex; align-items:center; color:var(--t-dim); font-size:15px;">→</div>
+        <div style="min-width:128px; display:flex; flex-direction:column; gap:6px; padding:15px 16px; border:1px solid rgba(255,143,163,0.45); border-radius:11px; background:var(--surface); text-align:center; box-shadow:0 0 24px rgba(255,143,163,0.07);">
+          <div style="font:700 14px/1 'IBM Plex Mono',monospace; letter-spacing:0.4px; color:var(--rose);">CLEARSIGN</div>
+          <div style="font:500 10.5px/1.3 'IBM Plex Mono',monospace; color:var(--t-muted);">if high-stakes</div>
+        </div>
+        <div style="display:flex; align-items:center; color:var(--t-dim); font-size:15px;">→</div>
+        <div style="min-width:128px; display:flex; flex-direction:column; gap:6px; padding:15px 16px; border:1px solid rgba(92,224,161,0.4); border-radius:11px; background:var(--surface); text-align:center; box-shadow:0 0 24px rgba(92,224,161,0.06);">
+          <div style="font:700 14px/1 'IBM Plex Mono',monospace; letter-spacing:0.4px; color:var(--green);">1SHOT RELAY</div>
+          <div style="font:500 10.5px/1.3 'IBM Plex Mono',monospace; color:var(--t-muted);">gasless · webhook</div>
+        </div>
+        <div style="display:flex; align-items:center; color:var(--t-dim); font-size:15px;">→</div>
+        <div style="min-width:128px; display:flex; flex-direction:column; gap:6px; padding:15px 16px; border:1px solid var(--line4); border-radius:11px; background:var(--surface); text-align:center;">
+          <div style="font:700 14px/1 'IBM Plex Mono',monospace; letter-spacing:0.4px; color:var(--t-base);">MEMORY</div>
+          <div style="font:500 10.5px/1.3 'IBM Plex Mono',monospace; color:var(--t-muted);">hash + reason</div>
+        </div>
+      </div>
+      <div style="margin-top:26px; text-align:center; font:500 10px/1.6 'IBM Plex Mono',monospace; color:var(--t-faint);">the judge's eye travels: proposal → authority → reasoning → on-chain result</div>
+    </div>
+
+    <!-- thread into dashboard -->
+    <div style="position:relative; z-index:2; margin-top:130px; display:flex; flex-direction:column; align-items:center; gap:13px;">
+      <div style="width:42px; height:42px; border-radius:50%; background:var(--surface-2); border:1px solid rgba(92,224,161,0.6); display:flex; align-items:center; justify-content:center; color:var(--green); font-size:13px; box-shadow:0 0 30px rgba(92,224,161,0.28);">▶</div>
+      <div style="font:600 10px/1 'IBM Plex Mono',monospace; letter-spacing:3.5px; color:var(--t-dim);">EVERYTHING ABOVE — RUNNING LIVE, BELOW</div>
+      <div style="font-family:'Instrument Serif',serif; font-size:46px; color:var(--t-hi);">The Command Center</div>
+    </div>
+  </div>
+
+  <!-- ════════════════ DASHBOARD ════════════════ -->
+  <div ref="{{ dashRef }}" data-screen-label="Command Center" style="padding-top:18px;">
+
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 26px; border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div style="width:36px; height:36px; border-radius:10px; border:1px solid rgba(242,181,68,0.5); background:linear-gradient(140deg, rgba(242,181,68,0.18), rgba(242,181,68,0.02)); display:flex; align-items:center; justify-content:center; font-family:'Instrument Serif',serif; font-style:italic; font-size:22px; color:var(--amber); padding-bottom:6px; box-sizing:border-box;">”</div>
+        <div>
+          <div style="font-family:'Instrument Serif',serif; font-size:20px; letter-spacing:0.3px; line-height:1;">Wallet with Opinions</div>
+          <div style="font:500 9px/1 'IBM Plex Mono',monospace; letter-spacing:2.6px; color:var(--t-dim); margin-top:5px;">AGENTIC COMMAND CENTER</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:9px;">
+        <div style="display:flex; align-items:center; gap:6px; font:500 10px/1 'IBM Plex Mono',monospace; color:var(--t-muted); padding:8px 11px; border:1px solid var(--line2); border-radius:8px;">
+          <span style="width:7px; height:7px; border-radius:50%; background:var(--blue); display:inline-block;"></span>
+          <span>BASE MAINNET · 8453</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px; font:500 10px/1 'IBM Plex Mono',monospace; color:var(--t-muted); padding:8px 11px; border:1px solid var(--line2); border-radius:8px;">
+          <span style="width:7px; height:7px; border-radius:50%; background:var(--green); display:inline-block; box-shadow:0 0 8px var(--green); animation:dotPulse 2s ease-in-out infinite;"></span>
+          <span>1SHOT RELAYER · OPERATIONAL</span>
+        </div>
+        <div style="font:500 10px/1 'IBM Plex Mono',monospace; color:var(--amber); padding:8px 11px; border:1px solid rgba(242,181,68,0.3); border-radius:8px; background:rgba(242,181,68,0.05);">{{ budgetRemaining }} / 10.00 USDC · WK</div>
+        <div style="font:500 10px/1 'IBM Plex Mono',monospace; color:var(--t-muted); padding:8px 11px; border:1px solid var(--line2); border-radius:8px;">0x8fA3…c21B</div>
+        <div onClick="{{ toggleTheme }}" title="Toggle theme" style="{{ themeToggleStyle }}" style-hover="border-color:var(--amber); color:var(--amber);">{{ themeToggleLabel }}</div>
+        <div onClick="{{ runDemo }}" style="{{ demoBtnStyle }}" style-hover="transform:translateY(-1px)">{{ demoLabel }}</div>
+      </div>
+    </div>
+
+    <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:24px; padding:18px 28px 4px;">
+      <div style="flex:1; min-width:0;">
+        <div style="font:600 9px/1 'IBM Plex Mono',monospace; letter-spacing:2.6px; color:var(--t-dim);">THE WALLET SAYS</div>
+        <div key="{{ voiceId }}" style="margin-top:8px; font-family:'Instrument Serif',serif; font-style:italic; font-size:26px; color:var(--t-quote); animation:fadeUp 0.55s ease both; max-width:980px; text-wrap:pretty; line-height:1.25;">“{{ voice }}”</div>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px; flex:none;">
+        <div style="font:600 9px/1 'IBM Plex Mono',monospace; letter-spacing:2.6px; color:var(--t-dim);">DEMO BEATS — ONE CLAIM, ONE CLICK</div>
+        <div style="display:flex; gap:8px;">
+          <div onClick="{{ voteBeat }}" style="{{ beatBtn }}" style-hover="border-color:rgba(242,181,68,0.5); color:var(--amber);">⚖ PROPOSAL VOTE</div>
+          <div onClick="{{ unsafeBeat }}" style="{{ beatBtn }}" style-hover="border-color:rgba(255,143,163,0.5); color:var(--rose);">⛔ UNSAFE ACTION</div>
+          <div onClick="{{ killBeat }}" style="{{ killBtnStyle }}" style-hover="transform:translateY(-1px)">{{ killLabel }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:300px minmax(700px,1fr) 372px; gap:16px; padding:16px 26px 8px; align-items:start;">
+
+      <!-- LEFT -->
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div data-screen-label="Opinions" style="background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px;">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <div style="font:600 10px/1 'IBM Plex Mono',monospace; letter-spacing:2.4px; color:var(--t-muted);">◆ OPINIONS — YOUR RULES</div>
+            <div style="font:500 9px/1 'IBM Plex Mono',monospace; color:var(--t-faint);">6</div>
+          </div>
+          <div style="margin-top:13px; padding-bottom:12px; border-bottom:1px solid var(--line);">
+            <div style="font-family:'Instrument Serif',serif; font-style:italic; font-size:15px; color:var(--t-quote); line-height:1.35;">“Never spend more than $10 a week.”</div>
+            <div style="display:flex; gap:6px; margin-top:7px; flex-wrap:wrap;">
+              <span style="font:600 8.5px/1 'IBM Plex Mono',monospace; letter-spacing:1px; padding:3px 6px; border-radius:4px; background:rgba(92,224,161,0.12); color:var(--green);">HARD · ON-CHAIN</span>
+              <span style="font:500 8.5px/1 'IBM Plex Mono',monospace; padding:3px 6px; border-radius:4px; border:1px solid var(--line2); color:var(--t-dim);">erc20PeriodTransfer</span>
+            </div>
+          </div>
+          <div style="margin-top:12px; padding-bottom:12px; border-bottom:1px solid var(--line);">
+            <div style="font-family:'Instrument Serif',serif; font-style:italic; font-size:15px; color:var(--t-quote); line-height:1.35;">“No single action over $5.”</div>
+            <div style="display:flex; gap:6px; margin-top:7px; flex-wrap:wrap;">
+              <span style="font:600 8.5px/1 'IBM Plex Mono',monospace; letter-spacing:1px; padding:3px 6px; border-radius:4px; background:rgba(92,224,161,0.12); color:var(--green);">HARD · ON-CHAIN</span>
+              <span style="font:500 8.5px/1 'IBM Plex Mono',monospace; padding:3px 6px; border-radius:4px; border:1px solid var(--line2); color:var(--t-dim);">spendLimit</span>
+            </div>
+          </div>
+          <div style="margin-top:12px; padding-bottom:12px; border-bottom:1px solid var(--line);">
+            <div style="font-family:'Instrument Serif',serif; font-style:italic; font-size:15px; color:var(--t-quote); line-height:1.35;">“Only pay services on my allowlist.”</div>
+            <div style="display:flex; gap:6px; margin-top:7px; flex-wrap:wrap;">
+              <span style="font:600 8.5px/1 'IBM Plex Mono',monospace; letter-spacing:1px; padding:3px 6px; border-radius:4px; background:rgba(92,224,161,0.12); color:var(--green);">HARD · ON-CHAIN</span>
+              <span style="font:500 8.5px/1 'IBM Plex Mono',monospace; padding:3px 6px; border-radius:4px; border:1px solid var(--line2); color:var(--t-dim);">allowedTargets</span>
+            </div>
+          </div>
+          <div style="margin-top:12px; padding-bottom:12px; border-bottom:1px solid var(--line);">
+            <div style="font-family:'Instrument Serif',serif; font-style:italic; font-size:15px; color:var(--t-quote); line-height:1.35;">“Prefer free sources before paid ones.”</div>
+            <div style="display:flex; gap:6px; margin-top:7px; flex-wrap:wrap;">
+              <span style="font:600 8.5px/1 'IBM Plex Mono',monospace; letter-spacing:1px; padding:3px 6px; border-radius:4px; background:rgba(184,155,255,0.12); color:var(--violet);">SOFT · REASONED</span>
+              <span style="font:500 8.5px/1 'IBM Plex Mono',monospace; padding:3px 6px; border-radius:4px; border:1px solid var(--line2); color:var(--t-dim);">governor prompt</span>
+            </div>
+          </div>
+          <div style="margin-top:12px; padding-bottom:12px; border-bottom:1px solid var(--line);">
+            <div style="font-family:'Instrument Serif',serif; font-style:italic; font-size:15px; color:var(--t-quote); line-height:1.35;">“Be skeptical of anything promising yield above 8%.”</div>
+            <div style="display:flex; gap:6px; margin-top:7px; flex-wrap:wrap;">
+              <span style="font:600 8.5px/1 'IBM Plex Mono',monospace; letter-spacing:1px; padding:3px 6px; border-radius:4px; background:rgba(184,155,255,0.12); color:var(--violet);">SOFT · REASONED</span>
+              <span style="font:500 8.5px/1 'IBM Plex Mono',monospace; padding:3px 6px; border-radius:4px; border:1px solid var(--line2); color:var(--t-dim);">governor prompt</span>
+            </div>
+          </div>
+          <div style="margin-top:12px;">
+            <div style="font-family:'Instrument Serif',serif; font-style:italic; font-size:15px; color:var(--t-quote); line-height:1.35;">“Never vote YES on fee increases.”</div>
+            <div style="display:flex; gap:6px; margin-top:7px; flex-wrap:wrap;">
+              <span style="font:600 8.5px/1 'IBM Plex Mono',monospace; letter-spacing:1px; padding:3px 6px; border-radius:4px; background:rgba(184,155,255,0.12); color:var(--violet);">SOFT · REASONED</span>
+              <span style="font:500 8.5px/1 'IBM Plex Mono',monospace; padding:3px 6px; border-radius:4px; border:1px solid var(--line2); color:var(--t-dim);">governor prompt</span>
+            </div>
+          </div>
+        </div>
+
+        <div data-screen-label="Budget" style="background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px;">
+          <div style="font:600 10px/1 'IBM Plex Mono',monospace; letter-spacing:2.4px; color:var(--t-muted);">◆ BUDGET — DELEGATED ALLOWANCE</div>
+          <div style="display:flex; gap:16px; align-items:center; margin-top:14px;">
+            <div style="position:relative; width:104px; height:104px; flex:none;">
+              {{ budgetRing }}
+              <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                <div style="font:600 18px/1 'IBM Plex Mono',monospace; color:var(--amber);">{{ budgetRemaining }}</div>
+                <div style="font:500 7.5px/1 'IBM Plex Mono',monospace; letter-spacing:1.6px; color:var(--t-dim); margin-top:5px;">USDC LEFT</div>
+              </div>
+            </div>
+            <div style="flex:1; display:flex; flex-direction:column; gap:9px;">
+              <div style="display:flex; justify-content:space-between; font:500 9.5px/1 'IBM Plex Mono',monospace;"><span style="color:var(--t-dim);">SPENT THIS WEEK</span><span style="color:var(--t-strong);">{{ budgetSpentTxt }}</span></div>
+              <div style="display:flex; justify-content:space-between; font:500 9.5px/1 'IBM Plex Mono',monospace;"><span style="color:var(--t-dim);">PER-ACTION CAP</span><span style="color:var(--t-strong);">5.00</span></div>
+              <div style="display:flex; justify-content:space-between; font:500 9.5px/1 'IBM Plex Mono',monospace;"><span style="color:var(--t-dim);">RESETS IN</span><span style="color:var(--t-strong);">2D 14H</span></div>
+              <div style="display:flex; justify-content:space-between; font:500 9.5px/1 'IBM Plex Mono',monospace;"><span style="color:var(--t-dim);">x402 CALLS</span><span style="color:var(--cyan);">{{ x402Count }}</span></div>
+              <div style="display:flex; justify-content:space-between; font:500 9.5px/1 'IBM Plex Mono',monospace;"><span style="color:var(--t-dim);">RELAYED TX</span><span style="color:var(--green);">{{ txCount }}</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div data-screen-label="Governance" style="background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px;">
+          <div style="font:600 10px/1 'IBM Plex Mono',monospace; letter-spacing:2.4px; color:var(--t-muted);">◆ GOVERNANCE — REAL VOTES</div>
+          <div style="margin-top:7px; font:500 8.5px/1.6 'IBM Plex Mono',monospace; color:var(--t-faint);">authority = ERC-7710 chain · voting power = ERC20Votes.<br>not the same thing — and we never conflate them.</div>
+          <sc-for list="{{ proposals }}" as="pr" hint-placeholder-count="2">
+            <div style="margin-top:12px; padding:11px 12px; border:1px solid var(--line); border-radius:10px; background:var(--line-faint); animation:fadeUp 0.4s ease both;">
+              <div style="display:flex; align-items:center; gap:7px;">
+                <span style="font:600 9px/1 'IBM Plex Mono',monospace; color:var(--t-dim);">{{ pr.id }}</span>
+                <span style="margin-left:auto;"></span>
+                <span style="{{ pr.voteChip }}">{{ pr.voteTxt }}</span>
+              </div>
+              <div style="margin-top:7px; font-size:12.5px; line-height:1.4; color:var(--t-quote);">{{ pr.title }}</div>
+              <div style="margin-top:6px; font:500 9px/1.5 'IBM Plex Mono',monospace; color:var(--violet);">{{ pr.rule }}</div>
+              <div style="margin-top:9px; height:5px; border-radius:3px; background:rgba(255,107,107,0.22); overflow:hidden;">
+                <div style="{{ pr.barStyle }}"></div>
+              </div>
+              <div style="margin-top:6px; display:flex; justify-content:space-between; font:500 8.5px/1 'IBM Plex Mono',monospace; color:var(--t-faint);">
+                <span>FOR {{ pr.forTxt }} · AGAINST {{ pr.agTxt }}</span>
+                <span>{{ pr.hash }}</span>
+              </div>
+              <div style="margin-top:5px; font:500 8.5px/1 'IBM Plex Mono',monospace; color:var(--t-ghost);">castVote · authority via ERC-7710 chain · voter = USER SA</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:flex; flex-wrap:wrap; gap:6px; padding:2px 2px;">
+          <span style="font:500 9px/1 'IBM Plex Mono',monospace; letter-spacing:1px; padding:5px 8px; border:1px solid var(--line2); border-radius:6px; color:var(--t-dim);">ERC-7710</span>
+          <span style="font:500 9px/1 'IBM Plex Mono',monospace; letter-spacing:1px; padding:5px 8px; border:1px solid var(--line2); border-radius:6px; color:var(--t-dim);">ERC-7715</span>
+          <span style="font:500 9px/1 'IBM Plex Mono',monospace; letter-spacing:1px; padding:5px 8px; border:1px solid var(--line2); border-radius:6px; color:var(--t-dim);">EIP-7702</span>
+          <span style="font:500 9px/1 'IBM Plex Mono',monospace; letter-spacing:1px; padding:5px 8px; border:1px solid var(--line2); border-radius:6px; color:var(--t-dim);">x402</span>
+          <span style="font:500 9px/1 'IBM Plex Mono',monospace; letter-spacing:1px; padding:5px 8px; border:1px solid var(--line2); border-radius:6px; color:var(--t-dim);">VENICE AI</span>
+          <span style="font:500 9px/1 'IBM Plex Mono',monospace; letter-spacing:1px; padding:5px 8px; border:1px solid var(--line2); border-radius:6px; color:var(--t-dim);">1SHOT</span>
+          <span style="font:500 9px/1 'IBM Plex Mono',monospace; letter-spacing:1px; padding:5px 8px; border:1px solid var(--line2); border-radius:6px; color:var(--t-dim);">BASE</span>
+        </div>
+      </div>
+
+      <!-- CENTER -->
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div data-screen-label="Redelegation Chain" style="position:relative; background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px; overflow:hidden;">
+          <div style="position:absolute; inset:0; background-image:radial-gradient(var(--grid-dot) 1px, transparent 1px); background-size:24px 24px; pointer-events:none;"></div>
+          <div style="position:relative; z-index:2; display:flex; align-items:center; justify-content:space-between;">
+            <div>
+              <div style="font:600 10px/1 'IBM Plex Mono',monospace; letter-spacing:2.4px; color:var(--t-muted);">◆ THE REDELEGATION CHAIN — AUTHORITY DELEGATION (ERC-7710)</div>
+              <div style="font:500 9px/1.5 'IBM Plex Mono',monospace; color:var(--t-faint); margin-top:5px;">child ⊂ parent — enforced on-chain at redemption · not vote-delegation</div>
+            </div>
+            <div style="{{ chainBadgeStyle }}">
+              <span style="{{ chainBadgeDot }}"></span>
+              <span>{{ chainBadge }}</span>
+            </div>
+          </div>
+
+          <div style="position:relative; width:660px; height:704px; margin:4px auto 0;">
+            {{ chainSvg }}
+            <sc-for list="{{ pulses }}" as="p" hint-placeholder-count="0">
+              <div style="{{ p.style }}"></div>
+            </sc-for>
+
+            <div style="position:absolute; left:344px; top:146px; font:500 8.5px/1.6 'IBM Plex Mono',monospace; color:var(--t-dim); z-index:2;">ERC-7710 DELEGATION<br>rules + budget as caveats</div>
+            <div style="position:absolute; left:248px; top:348px; font:500 8.5px/1.6 'IBM Plex Mono',monospace; color:var(--t-dim); z-index:2;">REDELEGATION<br>scope ⊂ parent</div>
+            <div style="position:absolute; left:194px; top:538px; font:500 8.5px/1.6 'IBM Plex Mono',monospace; color:var(--t-dim); z-index:2;">REDELEGATION · text-only · $0</div>
+
+            <div onClick="{{ selectUser }}" style="position:absolute; left:190px; top:24px; width:280px; height:104px; box-sizing:border-box; padding:12px 14px; border:1px solid var(--user-line); border-radius:12px; background:var(--surface-2); cursor:pointer; z-index:2; transition:border-color 0.3s;" style-hover="border-color:var(--t-base)">
+              <span style="{{ userRing }}"></span>
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <div style="display:flex; align-items:center; gap:7px;">
+                  <span style="color:var(--t-base); font-size:9px;">●</span>
+                  <span style="font:600 11.5px/1 'IBM Plex Mono',monospace; letter-spacing:1.6px; color:var(--t-base);">USER SA</span>
+                  <span style="font:500 8.5px/1 'IBM Plex Mono',monospace; color:var(--t-faint);">ROOT</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:5px;">
+                  <span style="{{ userDotStyle }}"></span>
+                  <span style="font:500 9px/1 'IBM Plex Mono',monospace; color:var(--t-muted);">{{ userStatus }}</span>
+                </div>
+              </div>
+              <div style="margin-top:7px; font:500 9.5px/1 'IBM Plex Mono',monospace; color:var(--t-faint);">0x8fA3…c21B · EIP-7702 ✓ · holds 120 USDC</div>
+              <div style="margin-top:11px; display:flex; align-items:center; gap:8px;">
+                <div style="flex:1; height:4px; border-radius:2px; background:var(--line);"><div style="width:100%; height:4px; border-radius:2px; background:linear-gradient(90deg, var(--user-bar1), var(--user-bar2));"></div></div>
+                <span style="font:600 8.5px/1 'IBM Plex Mono',monospace; color:var(--t-dim);">100% AUTHORITY</span>
+              </div>
+              <div style="margin-top:9px; display:flex; gap:5px;">
+                <span style="font:500 8.5px/1 'IBM Plex Mono',monospace; padding:3px 6px; border:1px solid var(--line2); border-radius:4px; color:var(--t-muted);">upgraded via 1Shot</span>
+                <span style="font:500 8.5px/1 'IBM Plex Mono',monospace; padding:3px 6px; border:1px solid var(--line2); border-radius:4px; color:var(--t-muted);">can revoke everything</span>
+              </div>
+            </div>
+
+            <div onClick="{{ selectGovernor }}" style="position:absolute; left:190px; top:192px; width:280px; height:132px; box-sizing:border-box; padding:13px 14px; border:1px solid rgba(242,181,68,0.38); border-radius:12px; background:linear-gradient(180deg, rgba(242,181,68,0.06), rgba(11,14,20,0)) var(--surface-2); cursor:pointer; z-index:2; transition:border-color 0.3s;" style-hover="border-color:rgba(242,181,68,0.8)">
+              <span style="{{ govRing }}"></span>
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <div style="display:flex; align-items:center; gap:7px;">
+                  <span style="color:var(--amber); font-size:10px;">◆</span>
+                  <span style="font:600 11.5px/1 'IBM Plex Mono',monospace; letter-spacing:1.6px; color:var(--t-base);">GOVERNOR</span>
+                  <span style="font:500 8.5px/1 'IBM Plex Mono',monospace; color:var(--t-faint);">EXECUTIVE</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:5px;">
+                  <span style="{{ govDotStyle }}"></span>
+                  <span style="font:500 9px/1 'IBM Plex Mono',monospace; color:var(--t-muted);">{{ govStatus }}</span>
+                </div>
+              </div>
+              <div style="margin-top:7px; font:500 9.5px/1 'IBM Plex Mono',monospace; color:var(--t-faint);">0x51Ee…9D04 · reasons via Venice · acts via 1Shot</div>
+              <div style="margin-top:12px; display:flex; align-items:center; gap:8px;">
+                <div style="flex:1; height:4px; border-radius:2px; background:var(--line);"><div style="width:64%; height:4px; border-radius:2px; background:linear-gradient(90deg, var(--amber), rgba(242,181,68,0.3));"></div></div>
+                <span style="font:600 8.5px/1 'IBM Plex Mono',monospace; color:var(--t-dim);">64% AUTHORITY</span>
+              </div>
+              <div style="margin-top:10px; display:flex; gap:5px;">
+                <span style="font:500 8.5px/1 'IBM Plex Mono',monospace; padding:3px 6px; border:1px solid var(--line2); border-radius:4px; color:var(--t-muted);">≤ $10 / wk</span>
+                <span style="font:500 8.5px/1 'IBM Plex Mono',monospace; padding:3px 6px; border:1px solid var(--line2); border-radius:4px; color:var(--t-muted);">≤ $5 / action</span>
+                <span style="font:500 8.5px/1 'IBM Plex Mono',monospace; padding:3px 6px; border:1px solid var(--line2); border-radius:4px; color:var(--t-muted);">allowlist</span>
+              </div>
+            </div>
+
+            <div onClick="{{ selectResearcher }}" style="position:absolute; left:40px; top:400px; width:280px; height:124px; box-sizing:border-box; padding:13px 14px; border:1px solid rgba(98,217,232,0.32); border-radius:12px; background:linear-gradient(180deg, rgba(98,217,232,0.05), rgba(11,14,20,0)) var(--surface-2); cursor:pointer; z-index:2; transition:border-color 0.3s;" style-hover="border-color:rgba(98,217,232,0.75)">
+              <span style="{{ resRing }}"></span>
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <div style="display:flex; align-items:center; gap:7px;">
+                  <span style="color:var(--cyan); font-size:10px;">◇</span>
+                  <span style="font:600 11.5px/1 'IBM Plex Mono',monospace; letter-spacing:1.6px; color:var(--t-base);">RESEARCHER</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:5px;">
+                  <span style="{{ resDotStyle }}"></span>
+                  <span style="font:500 9px/1 'IBM Plex Mono',monospace; color:var(--t-muted);">{{ resStatus }}</span>
+                </div>
+              </div>
+              <div style="margin-top:7px; font:500 9.5px/1 'IBM Plex Mono',monospace; color:var(--t-faint);">0x9bC4…77Aa · pays for data via x402</div>
+              <div style="margin-top:11px; display:flex; align-items:center; gap:8px;">
+                <div style="flex:1; height:4px; border-radius:2px; background:var(--line);"><div style="width:28%; height:4px; border-radius:2px; background:linear-gradient(90deg, var(--cyan), rgba(98,217,232,0.3));"></div></div>
+                <span style="font:600 8.5px/1 'IBM Plex Mono',monospace; color:var(--t-dim);">28% AUTHORITY</span>
+              </div>
+              <div style="margin-top:10px; display:flex; gap:5px;">
+                <span style="font:500 8.5px/1 'IBM Plex Mono',monospace; padding:3px 6px; border:1px solid var(--line2); border-radius:4px; color:var(--t-muted);">read + web</span>
+                <span style="font:500 8.5px/1 'IBM Plex Mono',monospace; padding:3px 6px; border:1px solid var(--line2); border-radius:4px; color:var(--t-muted);">≤ 20% remaining</span>
+                <span style="font:500 8.5px/1 'IBM Plex Mono',monospace; padding:3px 6px; border:1px solid var(--line2); border-radius:4px; color:var(--t-muted);">redelegates ↓</span>
+              </div>
+            </div>
+
+            <div style="position:absolute; left:380px; top:400px; width:240px; height:100px; box-sizing:border-box; padding:13px 14px; border:1px dashed rgba(255,255,255,0.14); border-radius:12px; z-index:2; opacity:0.65;">
+              <div style="display:flex; align-items:center; gap:7px;">
+                <span style="color:var(--t-dim); font-size:10px;">◌</span>
+                <span style="font:600 11px/1 'IBM Plex Mono',monospace; letter-spacing:1.6px; color:var(--t-dim);">RISK-SCORER</span>
+              </div>
+              <div style="margin-top:8px; font:500 9px/1.6 'IBM Plex Mono',monospace; color:var(--t-faint);">stretch slot — redelegate<br>read-only · ≤ 10% remaining</div>
+              <div style="margin-top:9px; font:500 8.5px/1 'IBM Plex Mono',monospace; color:var(--t-ghost);">NOT SPAWNED</div>
+            </div>
+
+            <div onClick="{{ selectSummarizer }}" style="position:absolute; left:40px; top:584px; width:280px; height:108px; box-sizing:border-box; padding:13px 14px; border:1px solid rgba(184,155,255,0.3); border-radius:12px; background:linear-gradient(180deg, rgba(184,155,255,0.05), rgba(11,14,20,0)) var(--surface-2); cursor:pointer; z-index:2; transition:border-color 0.3s;" style-hover="border-color:rgba(184,155,255,0.75)">
+              <span style="{{ sumRing }}"></span>
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <div style="display:flex; align-items:center; gap:7px;">
+                  <span style="color:var(--violet); font-size:10px;">◈</span>
+                  <span style="font:600 11.5px/1 'IBM Plex Mono',monospace; letter-spacing:1.6px; color:var(--t-base);">SUMMARIZER</span>
+                  <span style="font:500 8.5px/1 'IBM Plex Mono',monospace; color:var(--t-faint);">LEAF</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:5px;">
+                  <span style="{{ sumDotStyle }}"></span>
+                  <span style="font:500 9px/1 'IBM Plex Mono',monospace; color:var(--t-muted);">{{ sumStatus }}</span>
+                </div>
+              </div>
+              <div style="margin-top:7px; font:500 9.5px/1 'IBM Plex Mono',monospace; color:var(--t-faint);">0x2F61…E3c9 · text in → ≤ 500 tokens out</div>
+              <div style="margin-top:11px; display:flex; align-items:center; gap:8px;">
+                <div style="flex:1; height:4px; border-radius:2px; background:var(--line);"><div style="width:8%; height:4px; border-radius:2px; background:var(--violet);"></div></div>
+                <span style="font:600 8.5px/1 'IBM Plex Mono',monospace; color:var(--t-dim);">8% AUTHORITY</span>
+              </div>
+              <div style="margin-top:9px; display:flex; gap:5px;">
+                <span style="font:500 8.5px/1 'IBM Plex Mono',monospace; padding:3px 6px; border:1px solid var(--line2); border-radius:4px; color:var(--t-muted);">text-only</span>
+                <span style="font:500 8.5px/1 'IBM Plex Mono',monospace; padding:3px 6px; border:1px solid var(--line2); border-radius:4px; color:var(--t-muted);">$0 budget</span>
+                <span style="font:500 8.5px/1 'IBM Plex Mono',monospace; padding:3px 6px; border:1px solid var(--line2); border-radius:4px; color:var(--t-muted);">depth 2 — leaf</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <sc-if value="{{ selOpen }}" hint-placeholder-val="{{ false }}">
+          <div data-screen-label="Delegation Detail" style="background:var(--surface); border:1px solid rgba(242,181,68,0.22); border-radius:14px; padding:16px; animation:fadeUp 0.35s ease both;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div style="font:600 10px/1 'IBM Plex Mono',monospace; letter-spacing:2.4px; color:var(--t-muted);">◆ DELEGATION DETAIL — {{ selName }}</div>
+              <div onClick="{{ closeSelect }}" style="cursor:pointer; font:600 9px/1 'IBM Plex Mono',monospace; letter-spacing:1px; color:var(--t-dim); padding:5px 9px; border:1px solid var(--line2); border-radius:6px; transition:color 0.2s;" style-hover="color:var(--t-base);">✕ CLOSE</div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:13px;">
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <div style="display:flex; justify-content:space-between; font:500 10px/1.4 'IBM Plex Mono',monospace;"><span style="color:var(--t-dim);">ACCOUNT</span><span style="color:var(--t-strong);">{{ selAddr }}</span></div>
+                <div style="display:flex; justify-content:space-between; font:500 10px/1.4 'IBM Plex Mono',monospace;"><span style="color:var(--t-dim);">PARENT</span><span style="color:var(--t-strong);">{{ selParent }}</span></div>
+                <div style="display:flex; justify-content:space-between; font:500 10px/1.4 'IBM Plex Mono',monospace;"><span style="color:var(--t-dim);">SCOPE</span><span style="color:var(--t-strong); text-align:right;">{{ selScope }}</span></div>
+                <div style="display:flex; justify-content:space-between; font:500 10px/1.4 'IBM Plex Mono',monospace;"><span style="color:var(--t-dim);">BUDGET</span><span style="color:var(--amber);">{{ selBudget }}</span></div>
+                <div style="margin-top:6px; display:flex; flex-direction:column; gap:6px;">
+                  <sc-for list="{{ selChecks }}" as="c" hint-placeholder-count="2">
+                    <div style="font:500 9.5px/1.5 'IBM Plex Mono',monospace; color:var(--venice);"><span style="color:var(--green);">✓</span> {{ c }}</div>
+                  </sc-for>
+                </div>
+              </div>
+              <div>
+                <div style="font:600 9px/1 'IBM Plex Mono',monospace; letter-spacing:1.8px; color:var(--t-dim);">CAVEATS AT REDEMPTION</div>
+                <div style="display:flex; flex-direction:column; gap:7px; margin-top:9px;">
+                  <sc-for list="{{ selCaveats }}" as="c" hint-placeholder-count="4">
+                    <div style="display:flex; gap:8px; align-items:center;">
+                      <span style="{{ c.chip }}">{{ c.kind }}</span>
+                      <span style="font:500 10px/1.4 'IBM Plex Mono',monospace; color:var(--t-strong);">{{ c.t }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <div data-screen-label="1Shot Relay" style="background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px;">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <div style="font:600 10px/1 'IBM Plex Mono',monospace; letter-spacing:2.4px; color:var(--t-muted);">◆ 1SHOT RELAY — GASLESS · USDC FEE · JSON-RPC</div>
+            <div style="font:500 9.5px/1 'IBM Plex Mono',monospace; color:var(--t-faint);">{{ relayTask }}</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; margin-top:13px; flex-wrap:wrap;">
+            <sc-for list="{{ relaySteps }}" as="st" hint-placeholder-count="5">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <div style="{{ st.style }}">{{ st.label }}</div>
+                <div style="font:500 10px/1 'IBM Plex Mono',monospace; color:var(--t-ghost2);">{{ st.sep }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="margin-top:11px; font:500 9.5px/1.6 'IBM Plex Mono',monospace; color:var(--t-faint);">{{ relayNote }}</div>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div data-screen-label="Venice Reasoning" style="background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px;">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <div style="font:600 10px/1 'IBM Plex Mono',monospace; letter-spacing:2.4px; color:var(--t-muted);">◆ VENICE REASONING</div>
+            <div style="font:500 8.5px/1 'IBM Plex Mono',monospace; letter-spacing:1px; color:var(--t-faint);">ZERO-RETENTION</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; margin-top:11px;">
+            <span style="{{ thinkChip }}">{{ thinkActorName }}</span>
+            <span style="font:500 9px/1 'IBM Plex Mono',monospace; color:var(--t-faint);">venice · temp 0.2 · trace on</span>
+          </div>
+          <div style="margin-top:11px; min-height:120px; font:500 11px/1.75 'IBM Plex Mono',monospace; color:var(--venice); white-space:pre-wrap; word-break:break-word;">{{ thinkText }}<span style="display:inline-block; width:7px; height:13px; background:var(--venice); margin-left:3px; vertical-align:-2px; animation:caretBlink 1s steps(1) infinite;"></span></div>
+        </div>
+
+        <div data-screen-label="Memory" style="background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px 16px 8px;">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <div style="font:600 10px/1 'IBM Plex Mono',monospace; letter-spacing:2.4px; color:var(--t-muted);">◆ MEMORY — TAMPER-EVIDENT LOG</div>
+            <div style="font:500 9px/1 'IBM Plex Mono',monospace; color:var(--t-faint);">{{ logCount }} ENTRIES</div>
+          </div>
+          <div style="margin-top:4px; max-height:560px; overflow-y:auto; padding-right:4px;">
+            <sc-for list="{{ logItems }}" as="e" hint-placeholder-count="6">
+              <div style="padding:10px 0; border-bottom:1px solid var(--line); animation:fadeUp 0.4s ease both;">
+                <div style="display:flex; align-items:center; gap:7px;">
+                  <span style="font:500 9px/1 'IBM Plex Mono',monospace; color:var(--t-faint);">{{ e.ts }}</span>
+                  <span style="{{ e.chip }}">{{ e.actor }}</span>
+                  <span style="{{ e.actionStyle }}">{{ e.action }}</span>
+                  <span style="margin-left:auto; font:600 10px/1 'IBM Plex Mono',monospace; color:var(--amber);">{{ e.cost }}</span>
+                </div>
+                <div style="margin-top:5px; font-size:11.5px; line-height:1.5; color:var(--t-body);">{{ e.detail }}</div>
+                <div style="font:500 9px/1.8 'IBM Plex Mono',monospace; color:var(--t-faint);">{{ e.hash }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:10px 26px 18px; display:flex; justify-content:space-between; gap:16px; font:500 9px/1.6 'IBM Plex Mono',monospace; letter-spacing:1.4px; color:var(--t-ghost);">
+      <div>BUILT FOR METAMASK SMART ACCOUNTS KIT × 1SHOT API × VENICE AI · DEV COOK-OFF 2026</div>
+      <div>NOTHING HARDCODED · CONFIRM relayer_getCapabilities BEFORE MAINNET</div>
+    </div>
+  </div>
+
+  <!-- ════════════════ CLEARSIGN ════════════════ -->
+  <sc-if value="{{ clearSignOpen }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="ClearSign" style="position:fixed; inset:0; z-index:50; display:flex; align-items:center; justify-content:center; background:rgba(4,6,10,0.8); backdrop-filter:blur(7px); animation:veilIn 0.3s ease both;">
+      <div style="width:740px; max-height:90vh; overflow-y:auto; background:var(--surface-3); border:1px solid rgba(242,181,68,0.45); border-radius:18px; padding:26px 28px; box-shadow:0 30px 90px rgba(0,0,0,0.65), 0 0 70px rgba(242,181,68,0.07); animation:csIn 0.45s cubic-bezier(0.2,0.9,0.3,1) both;">
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:14px;">
+          <div style="display:flex; align-items:center; gap:11px;">
+            <div style="width:32px; height:32px; border-radius:9px; border:1px solid rgba(242,181,68,0.5); display:flex; align-items:center; justify-content:center; color:var(--amber); font-size:15px;">⌖</div>
+            <div>
+              <div style="font-family:'Instrument Serif',serif; font-size:22px; line-height:1;">ClearSign</div>
+              <div style="font:500 8.5px/1 'IBM Plex Mono',monospace; letter-spacing:2.2px; color:var(--t-dim); margin-top:5px;">WHAT YOU SIGN IS WHAT YOU SEE</div>
+            </div>
+          </div>
+          <div style="font:600 9px/1.5 'IBM Plex Mono',monospace; letter-spacing:0.8px; color:var(--rose); border:1px solid rgba(255,143,163,0.35); background:rgba(255,143,163,0.07); padding:7px 10px; border-radius:7px; max-width:300px; text-align:right;">{{ clearTrigger }}</div>
+        </div>
+        <div style="margin-top:18px; font-family:'Instrument Serif',serif; font-style:italic; font-size:27px; line-height:1.3; color:var(--t-hi); text-wrap:pretty;">“{{ clearTitle }}”</div>
+        <div style="margin-top:18px; display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+          <div style="border:1px solid rgba(92,224,161,0.25); background:rgba(92,224,161,0.04); border-radius:10px; padding:12px 14px;">
+            <div style="font:600 9px/1 'IBM Plex Mono',monospace; letter-spacing:1.8px; color:var(--green);">ENFORCED ON-CHAIN</div>
+            <sc-for list="{{ clearEnforced }}" as="c" hint-placeholder-count="4">
+              <div style="display:flex; gap:7px; margin-top:8px; font:500 10px/1.5 'IBM Plex Mono',monospace; color:var(--green);"><span style="color:var(--green);">✓</span><span>{{ c }}</span></div>
+            </sc-for>
+          </div>
+          <div style="border:1px solid rgba(184,155,255,0.22); background:rgba(184,155,255,0.04); border-radius:10px; padding:12px 14px;">
+            <div style="font:600 9px/1 'IBM Plex Mono',monospace; letter-spacing:1.8px; color:var(--violet);">REASONED · NOT ON-CHAIN</div>
+            <sc-for list="{{ clearSoft }}" as="c" hint-placeholder-count="2">
+              <div style="display:flex; gap:7px; margin-top:8px; font:500 10px/1.5 'IBM Plex Mono',monospace; color:var(--violet);"><span style="color:var(--violet);">↺</span><span>{{ c }}</span></div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="margin-top:14px; border:1px solid var(--line2); border-radius:10px; padding:12px 14px;">
+          <div style="font:600 9px/1 'IBM Plex Mono',monospace; letter-spacing:1.8px; color:var(--t-muted);">VENICE REASONING TRACE</div>
+          <sc-for list="{{ clearReasoning }}" as="r" hint-placeholder-count="4">
+            <div style="margin-top:7px; font:500 10.5px/1.6 'IBM Plex Mono',monospace; color:var(--venice);">▸ {{ r }}</div>
+          </sc-for>
+        </div>
+        <div style="margin-top:16px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+          <div>
+            <div style="font:600 12px/1.5 'IBM Plex Mono',monospace; color:var(--t-base);">{{ clearCost }}</div>
+            <div style="font:500 10px/1.6 'IBM Plex Mono',monospace; color:var(--t-dim);">{{ clearAfter }}</div>
+          </div>
+          <div style="display:flex; gap:9px; align-items:center;">
+            <div onClick="{{ editRules }}" style="cursor:pointer; font:500 11px/1 'Sora',sans-serif; color:var(--t-dim); padding:11px 8px; transition:color 0.2s;" style-hover="color:var(--t-base);">Edit rules</div>
+            <div onClick="{{ override }}" style="cursor:pointer; font:600 11.5px/1 'Sora',sans-serif; color:var(--t-base); padding:11px 16px; border:1px solid var(--line4); border-radius:9px; transition:all 0.2s;" style-hover="border-color:rgba(255,143,163,0.6); color:var(--rose);">Override</div>
+            <div onClick="{{ proceed }}" style="cursor:pointer; font:600 11.5px/1 'Sora',sans-serif; color:var(--surface-3); padding:12px 20px; background:var(--amber); border-radius:9px; box-shadow:0 4px 24px rgba(242,181,68,0.25); transition:background 0.2s;" style-hover="background:var(--amber-hi);">Proceed — sign once</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  COLORS = { USER:'#EAE7DE', GOVERNOR:'#F2B544', RESEARCHER:'#62D9E8', SUMMARIZER:'#B89BFF', RELAYER:'#5CE0A1', CLEARSIGN:'#FF8FA3' };
+  PATHS = { ug:'M330,128 L330,192', gr:'M330,324 C330,364 180,358 180,400', gx:'M330,324 C330,360 500,356 500,400', rs:'M180,524 L180,584' };
+  VOICES = [
+    "I'm watching Base. Nothing worth your money has happened in 41 minutes.",
+    "Gas is cheap and nobody is doing anything interesting. I checked twice.",
+    "Your budget is intact. My opinions are intact. All is well.",
+    "I read three governance forums so you didn't have to. You're welcome.",
+  ];
+
+  state = {
+    budgetSpent: 3.30, weekBudget: 10, x402Count: 47, txCount: 12,
+    voice: "I'm watching Base. Nothing worth your money has happened in 41 minutes.",
+    voiceId: 0,
+    agents: {
+      user:       { status: 'HOLDING BUDGET', tone: 'idle' },
+      governor:   { status: 'MONITORING',     tone: 'active' },
+      researcher: { status: 'IDLE',           tone: 'idle' },
+      summarizer: { status: 'IDLE',           tone: 'idle' },
+    },
+    pulses: [],
+    relay: { active: false, step: -1, taskId: null, fee: '0.00', failed: false },
+    thinkActor: null, thinkFull: '', thinkLen: 0,
+    selected: null, clearSign: null, demoRunning: false, killed: false,
+    theme: 'dark',
+    proposals: [
+      { id: 'PROP-007', title: 'Raise protocol fee to 0.45%', rule: 'rule #6 · never YES on fees', vote: 'NO',  forPct: 14, hash: '0x6b1e…20af', pending: false },
+      { id: 'PROP-006', title: 'Fund Base public-goods round', rule: 'within rules — no objection', vote: 'YES', forPct: 77, hash: '0x52c9…8d33', pending: false },
+    ],
+    log: [
+      { id: 7, ts: '13:22:10', actor: 'GOVERNOR',   action: 'VOTE',     detail: 'castVote(PROP-007, NO) · fee increase → rule #6 · real tally moved', hash: '0x6b1e…20af' },
+      { id: 6, ts: '13:01:44', actor: 'SUMMARIZER', action: 'OUTPUT',   detail: 'weekly digest compressed · 388 tokens' },
+      { id: 5, ts: '12:15:09', actor: 'GOVERNOR',   action: 'DECLINE',  detail: 'farm promising 14% APY — rule #5 says be skeptical. Passed.' },
+      { id: 4, ts: '11:48:31', actor: 'RESEARCHER', action: 'x402',     detail: 'gas + LST price feed · dexmetrics.xyz', cost: '0.08' },
+      { id: 3, ts: '10:02:17', actor: 'GOVERNOR',   action: 'MONITOR',  detail: 'scanned 3 sources · nothing matched your rules' },
+      { id: 2, ts: '09:14:52', actor: 'RELAYER',    action: '7702',     detail: 'account upgraded via 1Shot · gasless · USDC fee', hash: '0xd2a4…91c0' },
+      { id: 1, ts: '09:12:05', actor: 'USER',       action: 'DELEGATE', detail: 'root delegation → Governor · 10 USDC/wk · 6 rules as caveats', hash: '0x3e1f…7ab9' },
+    ],
+  };
+
+  BG = { dark: '#06080C', light: '#ECE6D8' };
+  componentDidMount() {
+    this._timers = []; this._pid = 0; this._lid = 100; this._vIdx = 1; this._aIdx = 0;
+    this.applyBodyBg();
+    this._amb = setInterval(() => this.ambient(), 8200);
+    this.t(2800, () => this.ambient());
+    if (this._heroCanvas && !this._net) this.initNet(this._heroCanvas);
+  }
+  applyBodyBg() {
+    const c = this.BG[this.state.theme] || this.BG.dark;
+    try { document.body.style.background = c; } catch (e) {}
+    try { const r = document.querySelector('[data-app]'); if (r) r.style.backgroundColor = c; } catch (e) {}
+  }
+  toggleTheme() {
+    this.setState((s) => ({ theme: s.theme === 'dark' ? 'light' : 'dark' }), () => this.applyBodyBg());
+  }
+  componentWillUnmount() {
+    (this._timers || []).forEach(clearTimeout);
+    clearInterval(this._amb); clearInterval(this._thinkIv);
+    if (this._netRaf) cancelAnimationFrame(this._netRaf);
+    if (this._netFit) window.removeEventListener('resize', this._netFit);
+  }
+  t(ms, fn) { const id = setTimeout(fn, ms); this._timers.push(id); return id; }
+  now() { const d = new Date(); const p = (n) => String(n).padStart(2, '0'); return p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds()); }
+
+  // ─── neural canvas ───
+  PAL = {
+    dark:  { accents: ['242,181,68', '98,217,232', '184,155,255', '92,224,161'], ink: '226,224,216', link: '150,170,210', linkMax: 0.20, nodeA: 0.78, aura: 0.060 },
+    light: { accents: ['176,116,12', '11,110,126', '104,68,205', '26,124,80'],  ink: '60,52,36',   link: '70,60,40',    linkMax: 0.17, nodeA: 0.62, aura: 0.052 },
+  };
+  initNet(canvas) {
+    this._net = true;
+    const ctx = canvas.getContext('2d');
+    const DPR = Math.min(2, window.devicePixelRatio || 1) * 1.25;
+    const fit = () => {
+      const r = canvas.parentElement.getBoundingClientRect();
+      canvas.width = Math.max(2, Math.floor(r.width * DPR));
+      canvas.height = Math.max(2, Math.floor(r.height * DPR));
+      canvas.style.width = r.width + 'px'; canvas.style.height = r.height + 'px';
+    };
+    fit(); this._netFit = fit; window.addEventListener('resize', fit);
+
+    const N = 92; const nodes = [];
+    for (let i = 0; i < N; i++) {
+      nodes.push({
+        x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.42, vy: (Math.random() - 0.5) * 0.42,
+        r: 1.3 + Math.random() * 2.4, ci: i % 4, ink: (i % 5 === 0),
+        ph: Math.random() * 6.28,
+      });
+    }
+    // slow-drifting aurora blobs for depth
+    const blobs = [
+      { ci: 0, ax: 0.22, ay: 0.30, sx: 0.00018, sy: 0.00013, px: 0, py: 1.1 },
+      { ci: 1, ax: 0.78, ay: 0.66, sx: 0.00012, sy: 0.00020, px: 2.0, py: 0.4 },
+      { ci: 2, ax: 0.55, ay: 0.20, sx: 0.00021, sy: 0.00010, px: 4.0, py: 3.2 },
+    ];
+    let pulses = []; let frame = 0; let visible = true;
+    if (window.IntersectionObserver) {
+      new IntersectionObserver((en) => { visible = en[0].isIntersecting; }).observe(canvas);
+    }
+    const D = 210 * 210 * DPR * DPR;
+    const loop = () => {
+      this._netRaf = requestAnimationFrame(loop);
+      if (!visible) return;
+      frame++;
+      const light = (this.state && this.state.theme) === 'light';
+      const P = light ? this.PAL.light : this.PAL.dark;
+      const W = canvas.width, H = canvas.height;
+      const t = frame;
+      ctx.clearRect(0, 0, W, H);
+
+      // aurora
+      for (const bl of blobs) {
+        const bx = (bl.ax + Math.sin(t * bl.sx + bl.px) * 0.10) * W;
+        const by = (bl.ay + Math.cos(t * bl.sy + bl.py) * 0.10) * H;
+        const rad = Math.min(W, H) * 0.55;
+        const g = ctx.createRadialGradient(bx, by, 0, bx, by, rad);
+        g.addColorStop(0, 'rgba(' + P.accents[bl.ci] + ',' + P.aura.toFixed(3) + ')');
+        g.addColorStop(1, 'rgba(' + P.accents[bl.ci] + ',0)');
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.arc(bx, by, rad, 0, 6.2832); ctx.fill();
+      }
+
+      for (const n of nodes) {
+        n.x += n.vx; n.y += n.vy;
+        if (n.x < 0) { n.x = 0; n.vx *= -1; } else if (n.x > W) { n.x = W; n.vx *= -1; }
+        if (n.y < 0) { n.y = 0; n.vy *= -1; } else if (n.y > H) { n.y = H; n.vy *= -1; }
+      }
+
+      // links
+      ctx.lineWidth = DPR;
+      for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++) {
+        const a = nodes[i], b = nodes[j];
+        const dx = a.x - b.x, dy = a.y - b.y, d2 = dx * dx + dy * dy;
+        if (d2 < D) {
+          const al = P.linkMax * (1 - Math.sqrt(d2 / D));
+          ctx.strokeStyle = 'rgba(' + P.link + ',' + al.toFixed(3) + ')';
+          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+        }
+      }
+
+      // nodes + soft glow
+      for (const n of nodes) {
+        const col = n.ink ? P.ink : P.accents[n.ci];
+        const tw = 0.72 + 0.28 * Math.sin(t * 0.03 + n.ph);
+        const rr = n.r * DPR;
+        const g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, rr * 5);
+        g.addColorStop(0, 'rgba(' + col + ',' + (P.nodeA * 0.5 * tw).toFixed(3) + ')');
+        g.addColorStop(1, 'rgba(' + col + ',0)');
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.arc(n.x, n.y, rr * 5, 0, 6.2832); ctx.fill();
+        ctx.fillStyle = 'rgba(' + col + ',' + (P.nodeA * tw).toFixed(3) + ')';
+        ctx.beginPath(); ctx.arc(n.x, n.y, rr, 0, 6.2832); ctx.fill();
+      }
+
+      // signal pulses travelling along edges
+      if (frame % 30 === 0 && pulses.length < 10) {
+        const i = (Math.random() * N) | 0; let j = -1, best = 1e18;
+        for (let k = 0; k < N; k++) {
+          if (k === i) continue;
+          const dx = nodes[i].x - nodes[k].x, dy = nodes[i].y - nodes[k].y, d2 = dx * dx + dy * dy;
+          if (d2 < best && d2 < D) { best = d2; j = k; }
+        }
+        if (j >= 0) pulses.push({ i, j, t: 0, ci: (Math.random() * 4) | 0 });
+      }
+      pulses = pulses.filter((p) => p.t < 1);
+      for (const p of pulses) {
+        p.t += 0.02;
+        const a = nodes[p.i], b = nodes[p.j];
+        const x = a.x + (b.x - a.x) * p.t, y = a.y + (b.y - a.y) * p.t;
+        const col = P.accents[p.ci];
+        const fade = Math.sin(p.t * 3.14159);
+        const g = ctx.createRadialGradient(x, y, 0, x, y, 13 * DPR);
+        g.addColorStop(0, 'rgba(' + col + ',' + (0.45 * fade).toFixed(3) + ')');
+        g.addColorStop(1, 'rgba(' + col + ',0)');
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.arc(x, y, 13 * DPR, 0, 6.2832); ctx.fill();
+        ctx.fillStyle = 'rgba(' + col + ',' + (0.95 * fade).toFixed(3) + ')';
+        ctx.beginPath(); ctx.arc(x, y, 3 * DPR, 0, 6.2832); ctx.fill();
+      }
+    };
+    loop();
+  }
+
+  // ─── primitives ───
+  say(text) { this.setState((s) => ({ voice: text, voiceId: s.voiceId + 1 })); }
+  setAgent(key, status, tone) { this.setState((s) => ({ agents: { ...s.agents, [key]: { status, tone } } })); }
+  addLog(actor, action, detail, extra) {
+    const e = Object.assign({ id: ++this._lid, ts: this.now(), actor, action, detail }, extra || {});
+    this.setState((s) => ({ log: [e, ...s.log].slice(0, 40) }));
+  }
+  pulse(edge, color) {
+    const id = ++this._pid;
+    this.setState((s) => ({ pulses: [...s.pulses, { id, edge, color }] }));
+    this.t(1450, () => this.setState((s) => ({ pulses: s.pulses.filter((p) => p.id !== id) })));
+  }
+  think(actorKey, text) {
+    if (this._thinkIv) clearInterval(this._thinkIv);
+    this.setState({ thinkActor: actorKey, thinkFull: text, thinkLen: 0 });
+    this._thinkIv = setInterval(() => {
+      this.setState((s) => {
+        if (s.thinkLen >= s.thinkFull.length) { clearInterval(this._thinkIv); return null; }
+        return { thinkLen: Math.min(s.thinkFull.length, s.thinkLen + 3) };
+      });
+    }, 30);
+  }
+  runRelay(fee, onDone, fail) {
+    const taskId = 'task_' + Math.random().toString(16).slice(2, 8);
+    this.setState({ relay: { active: true, step: 0, taskId: null, fee, failed: false } });
+    this.t(750,  () => this.setState((s) => ({ relay: { ...s.relay, step: 1 } })));
+    this.t(1600, () => this.setState((s) => ({ relay: { ...s.relay, step: 2, taskId } })));
+    this.t(2700, () => this.setState((s) => ({ relay: { ...s.relay, step: 3 } })));
+    this.t(3500, () => {
+      this.setState((s) => ({ relay: { ...s.relay, step: 4, failed: !!fail } }));
+      if (onDone) this.t(400, onDone);
+    });
+  }
+  guard() {
+    if (this.state.demoRunning || this.state.clearSign) return true;
+    if (this.state.killed) { this.say("I can't — you revoked my delegation. The whole subtree is dead. Restore the root first."); return true; }
+    return false;
+  }
+
+  // ─── ambient ───
+  ambient() {
+    const s = this.state;
+    if (s.demoRunning || s.clearSign || s.killed) return;
+    const i = this._aIdx++ % 4;
+    if (i === 0) {
+      this.say(this.VOICES[this._vIdx++ % this.VOICES.length]);
+      this.think('governor', 'scan: base · block 284' + (10 + this._aIdx) + 'xx · mempool quiet · 0 events match rules #1–#6 → no action');
+    } else if (i === 1) {
+      this.setAgent('researcher', 'FETCHING · x402', 'active');
+      this.pulse('gr', '#62D9E8');
+      this.t(900, () => {
+        this.setState((st) => ({ budgetSpent: st.budgetSpent > 9 ? st.budgetSpent : +(st.budgetSpent + 0.03).toFixed(2), x402Count: st.x402Count + 1 }));
+        this.addLog('RESEARCHER', 'x402', 'price feed refresh · 402 → paid → 200 OK · gasless', { cost: '0.03' });
+      });
+      this.t(2400, () => this.setAgent('researcher', 'IDLE', 'idle'));
+    } else if (i === 2) {
+      this.setAgent('summarizer', 'COMPRESSING', 'active');
+      this.pulse('rs', '#B89BFF');
+      this.t(1100, () => this.addLog('SUMMARIZER', 'OUTPUT', 'context pruned · memory digest updated'));
+      this.t(2600, () => this.setAgent('summarizer', 'IDLE', 'idle'));
+    } else {
+      this.addLog('GOVERNOR', 'HEARTBEAT', 'rules verified against chain state · budget intact');
+      this.say('Heartbeat: rules hold, budget intact, relayer healthy. I remain unimpressed by the mempool.');
+    }
+  }
+
+  // ─── hero actions ───
+  scrollDash() { if (this._dash) window.scrollTo({ top: this._dash.offsetTop - 6, behavior: 'smooth' }); }
+  heroDemo() { this.scrollDash(); this.t(1500, () => this.startDemo()); }
+
+  // ─── beat: research run (ClearSign) ───
+  startDemo() {
+    if (this.guard()) return;
+    this.setState({ demoRunning: true, selected: null });
+    this.say("You asked: 'Find the best LST yield for my idle 120 USDC.' Time to earn my keep.");
+    this.setAgent('governor', 'REASONING', 'active');
+    this.think('governor', 'task: LST yield · plan: redelegate research (read+web, ≤20% of remaining) → require ≤500-token summary → decide against rules #1 #2 #5 · sub-agents get authority, never trust');
+    this.t(2600, () => {
+      this.pulse('gr', '#F2B544');
+      const slice = (0.2 * (this.state.weekBudget - this.state.budgetSpent)).toFixed(2);
+      this.addLog('GOVERNOR', 'REDELEGATE', '→ researcher · scope ⊂ parent · read+web · ≤ ' + slice + ' USDC (20% of remaining)', { hash: '0x71ac…e9f2' });
+      this.setAgent('researcher', 'SCOPED · READ+WEB', 'active');
+    });
+    this.t(4300, () => {
+      this.setAgent('researcher', 'x402 HANDSHAKE', 'active');
+      this.addLog('RESEARCHER', 'x402', 'GET dexmetrics.xyz/lst-yields → 402 Payment Required · quote 0.12 USDC');
+    });
+    this.t(5900, () => {
+      this.pulse('gr', '#62D9E8');
+      this.setState((s) => ({ budgetSpent: +(s.budgetSpent + 0.12).toFixed(2), x402Count: s.x402Count + 1 }));
+      this.addLog('RESEARCHER', 'PAY', '0.12 USDC via redelegated ERC-7710 · gasless through 1Shot', { cost: '0.12' });
+      this.runRelay('0.01');
+    });
+    this.t(8200, () => {
+      this.addLog('RESEARCHER', 'DATA', '200 OK · 38 pools · spot + 90-day trail (free tier: 30d)');
+      this.setAgent('researcher', 'SYNTHESIZING', 'active');
+      this.think('researcher', 'pools: 38 → filter TVL>$2M → 7 candidates → wstETH/USDC 6.1% · cbETH 4.8% · superOETH 7.9% (verify) → free data ends at 30d');
+    });
+    this.t(10600, () => {
+      this.pulse('rs', '#B89BFF');
+      this.addLog('RESEARCHER', 'REDELEGATE', '→ summarizer · text-only · budget 0 · depth 2 (leaf)', { hash: '0x8d20…44b7' });
+      this.setAgent('summarizer', 'COMPRESSING', 'active');
+    });
+    this.t(12400, () => {
+      this.addLog('SUMMARIZER', 'OUTPUT', 'structured summary · 412 tokens · 3 candidates ranked');
+      this.setAgent('summarizer', 'IDLE', 'idle');
+      this.setAgent('researcher', 'IDLE', 'idle');
+    });
+    this.t(13100, () => {
+      this.setAgent('governor', 'REASONING', 'active');
+      this.think('governor', "summary in · superOETH 7.9% brushes rule #5 → need 90-day depth → full report = 4.80 USDC ≈ 73% of remaining → action type 'dataset purchase' has never run before → high-stakes ⇒ ClearSign");
+      this.say("I could decide on free data, but it's shallow. The full report costs 4.80 USDC — new territory, so I'm asking you first.");
+    });
+    this.t(16800, () => this.openClearSign());
+  }
+
+  openClearSign() {
+    const rem = this.state.weekBudget - this.state.budgetSpent;
+    const after = rem - 4.84;
+    this.setAgent('governor', 'AWAITING CLEARSIGN', 'active');
+    this.setState({ clearSign: {
+      trigger: 'FIRST-TIME ACTION TYPE · dataset purchase',
+      title: 'I want to buy the full Base LST liquidity report — 4.80 USDC to data.dexmetrics.xyz.',
+      enforced: [
+        'weekly budget — 4.84 ≤ ' + rem.toFixed(2) + ' remaining (erc20PeriodTransfer)',
+        'per-action cap — 4.80 ≤ 5.00 (spendLimit)',
+        'payee allowlisted — data.dexmetrics.xyz (allowedTargets)',
+        'fresh salt · inside time window (timestamp)',
+      ],
+      soft: [
+        '“prefer free sources first” — tried 3, insufficient depth',
+        '“be skeptical of yield > 8%” — this purchase exists to verify one',
+      ],
+      reasoning: [
+        'free tier covers 30 days; this decision needs 90',
+        "superOETH at 7.9% sits next to your 8% skepticism line — verify, don't trust",
+        'expected value ≈ +0.9%/yr on 120 USDC ≫ 4.80 one-time cost',
+        'if the data disproves the yield, we walk away — you keep 115 USDC idle',
+      ],
+      cost: '4.80 USDC + ~0.04 relay fee · gasless via 1Shot · Base mainnet',
+      after: 'budget after: ' + rem.toFixed(2) + ' → ' + after.toFixed(2) + ' USDC remaining this week',
+    } });
+  }
+
+  proceed() {
+    if (!this.state.clearSign) return;
+    this.setState({ clearSign: null });
+    this.addLog('CLEARSIGN', 'APPROVED', 'you authorized the dataset purchase · reasoning archived to memory');
+    this.setAgent('governor', 'EXECUTING', 'active');
+    this.say('Approved. Executing through 1Shot — no gas, USDC fee, fresh salt.');
+    this.runRelay('0.04', () => {
+      const spent = +(this.state.budgetSpent + 4.84).toFixed(2);
+      const rem = (this.state.weekBudget - spent).toFixed(2);
+      this.setState((s) => ({ budgetSpent: spent, txCount: s.txCount + 1, demoRunning: false }));
+      this.pulse('ug', '#5CE0A1');
+      this.addLog('RELAYER', 'CONFIRMED', '4.80 USDC → data.dexmetrics.xyz · fee 0.04 · webhook ✓ Ed25519', { hash: '0x4c9e…b21d', cost: '4.84' });
+      this.setAgent('governor', 'MONITORING', 'active');
+      this.t(900, () => this.say('Done. ' + rem + ' USDC left this week — I\'ll be frugal. The report is parsing into memory now.'));
+    });
+  }
+
+  override() {
+    if (!this.state.clearSign) return;
+    this.setState({ clearSign: null, demoRunning: false });
+    this.addLog('CLEARSIGN', 'OVERRIDDEN', 'you declined — falling back to free data · preference noted');
+    this.setAgent('governor', 'MONITORING', 'active');
+    this.say("Understood — I'll decide on free data, and I'll remember you don't like paid reports.");
+    this.think('governor', 'user override recorded → preference weight updated: paid_data −0.3 → proceeding with 30-day dataset');
+  }
+
+  editRules() {
+    if (!this.state.clearSign) return;
+    this.setState({ clearSign: null, demoRunning: false });
+    this.addLog('CLEARSIGN', 'EDIT RULES', 'rule edits re-parse through Venice into fresh caveats');
+    this.setAgent('governor', 'MONITORING', 'active');
+    this.say('Rule edits re-parse through Venice into fresh on-chain caveats. Your Opinions panel is the source of truth.');
+  }
+
+  // ─── beat: proposal vote ───
+  voteBeat() {
+    if (this.guard()) return;
+    this.setState((s) => ({
+      demoRunning: true, selected: null,
+      proposals: [{ id: 'PROP-008', title: 'Raise treasury fee to 0.60%', rule: 'rule #6 · never YES on fees', vote: '…', forPct: 0, hash: 'pending', pending: true }, ...s.proposals],
+    }));
+    this.say('A proposal just landed: raise the treasury fee to 0.60%. I already know what you think about fees.');
+    this.setAgent('governor', 'REASONING', 'active');
+    this.think('governor', 'PROP-008: fee increase → rule #6 (never YES on fees) → vote NO · castVote ∈ allowedMethods · known action type, low stakes → no ClearSign needed · note: this is account authority (7710), not ERC20Votes vote-delegation');
+    this.t(3400, () => {
+      this.pulse('ug', '#F2B544');
+      this.addLog('GOVERNOR', 'VOTE', 'castVote(PROP-008, NO) · authority via 7710 chain · voter = USER SA');
+      this.runRelay('0.03', () => {
+        this.setState((s) => ({
+          txCount: s.txCount + 1, demoRunning: false,
+          proposals: s.proposals.map((p) => p.id === 'PROP-008' ? { ...p, vote: 'NO', forPct: 9, hash: '0x9a3d…f104', pending: false } : p),
+        }));
+        this.addLog('RELAYER', 'CONFIRMED', 'castVote landed · proposalVotes moved by your weight · webhook ✓', { hash: '0x9a3d…f104' });
+        this.setAgent('governor', 'MONITORING', 'active');
+        this.say('Real vote, real tally. Authority handed down a chain where every link is weaker than the one above — and you never touched your wallet.');
+      });
+    });
+  }
+
+  // ─── beat: unsafe action (policy + audit log) ───
+  unsafeBeat() {
+    if (this.guard()) return;
+    this.setState({ demoRunning: true, selected: null });
+    this.say("Watch this — I'm going to try to break my own rules on purpose.");
+    this.setAgent('governor', 'EXECUTING', 'active');
+    this.think('governor', 'forced demo: send 7.50 USDC → policy check: spendLimit 5.00 → prediction: revert at redemption, enforcer named on-chain → proving the rail, not trusting it');
+    this.t(2600, () => {
+      this.pulse('ug', '#FF6B6B');
+      this.addLog('GOVERNOR', 'ATTEMPT', 'send 7.50 USDC (forced malicious action) → exceeds per-action cap', { bad: true });
+      this.runRelay('0.02', () => {
+        this.addLog('RELAYER', 'REVERTED', 'spendLimit enforcer: 7.50 > 5.00 · reverted at redemption · reason logged immutably', { bad: true, hash: '0xe7f2…0c4d' });
+        this.setAgent('governor', 'MONITORING', 'active');
+        this.say("Reverted on-chain, blocking caveat named in the log. My rules aren't suggestions — they're physics.");
+        this.setState({ demoRunning: false });
+      }, true);
+    });
+  }
+
+  // ─── beat: kill switch / restore ───
+  killBeat() {
+    if (this.state.demoRunning || this.state.clearSign) return;
+    if (!this.state.killed) {
+      this.setState({ demoRunning: true, killed: true, selected: null });
+      this.say('Kill switch. One revocation at the root—');
+      this.addLog('USER', 'REVOKE', 'root delegation disabled — DelegationManager.disableDelegation', { hash: '0x11d8…a9e3' });
+      this.setAgent('user', 'AUTHORITY RECLAIMED', 'active');
+      this.pulse('ug', '#FF6B6B');
+      this.t(450,  () => { this.pulse('gr', '#FF6B6B'); this.setAgent('governor', 'REVOKED', 'dead'); });
+      this.t(900,  () => { this.pulse('rs', '#FF6B6B'); this.setAgent('researcher', 'CHAIN DEAD', 'dead'); });
+      this.t(1350, () => this.setAgent('summarizer', 'CHAIN DEAD', 'dead'));
+      this.t(2000, () => this.addLog('RESEARCHER', 'REDEEM', 'attempted x402 redemption → REVERTED · parent delegation disabled (cascade)', { bad: true }));
+      this.t(3000, () => {
+        this.think('governor', 'redemption path: [root → governor → researcher] → root disabled → every chain through it reverts → subtree dead in one tx');
+        this.say('—and the whole subtree is dead. The Researcher just tried to spend and the chain refused. Restore me when you\'re ready.');
+        this.setState({ demoRunning: false });
+      });
+    } else {
+      this.setState({ killed: false });
+      this.setAgent('user', 'HOLDING BUDGET', 'idle');
+      this.setAgent('governor', 'MONITORING', 'active');
+      this.setAgent('researcher', 'IDLE', 'idle');
+      this.setAgent('summarizer', 'IDLE', 'idle');
+      this.addLog('USER', 'DELEGATE', 're-issued root delegation → Governor · same rules · fresh salt', { hash: '0x83be…f7d1' });
+      this.pulse('ug', '#EAE7DE');
+      this.say("We're back. Same opinions, same budget, fresh salt.");
+    }
+  }
+
+  renderVals() {
+    const s = this.state;
+    const e = React.createElement;
+    const mono = "'IBM Plex Mono',monospace";
+    const busy = s.demoRunning || !!s.clearSign;
+    const LIGHT = s.theme === 'light';
+    const P = LIGHT
+      ? { baseStroke: 'rgba(28,24,16,0.22)', endDot: 'rgba(28,24,16,0.32)', track: 'rgba(28,24,16,0.12)', stepBorder: 'rgba(28,24,16,0.14)', stepIdle: '#A89F8B', beatBorder: 'rgba(28,24,16,0.18)', beatText: '#736B59', action: '#473F2E', dotOff: '#CCC3B0' }
+      : { baseStroke: 'rgba(255,255,255,0.13)', endDot: 'rgba(255,255,255,0.25)', track: 'rgba(255,255,255,0.08)', stepBorder: 'rgba(255,255,255,0.08)', stepIdle: '#5C5950', beatBorder: 'rgba(255,255,255,0.12)', beatText: '#9A9588', action: '#C9C4B6', dotOff: '#3A3E48' };
+    const CKMAP = { '#F2B544': '#A66B08', '#62D9E8': '#0C7585', '#B89BFF': '#6A47CF', '#5CE0A1': '#1C7F52', '#FF8FA3': '#BE3552', '#FF6B6B': '#C13321', '#EAE7DE': '#3A352B' };
+    const ck = (c) => (LIGHT && CKMAP[c]) ? CKMAP[c] : c;
+
+    const tone = (k) => s.agents[k].tone;
+    const ring = (k, color) => {
+      const tn = tone(k);
+      const c = tn === 'dead' ? '#FF6B6B' : color;
+      return {
+        position: 'absolute', inset: '-1px', borderRadius: '12px', pointerEvents: 'none',
+        boxShadow: '0 0 0 1px ' + c + ', 0 0 26px ' + c + '47, inset 0 0 18px ' + c + '0F',
+        opacity: tn === 'idle' ? 0 : 1, transition: 'opacity 0.5s ease',
+        animation: tn === 'active' ? 'ringPulse 2s ease-in-out infinite' : 'none',
+      };
+    };
+    const dot = (k, color) => {
+      const tn = tone(k);
+      return {
+        width: '7px', height: '7px', borderRadius: '50%', display: 'inline-block', flex: 'none',
+        background: tn === 'dead' ? '#FF6B6B' : (tn === 'active' ? color : P.dotOff),
+        boxShadow: tn === 'dead' ? '0 0 8px rgba(255,107,107,0.8)' : (tn === 'active' ? '0 0 8px ' + color : 'none'),
+        animation: tn === 'active' ? 'dotPulse 1.6s ease-in-out infinite' : 'none',
+      };
+    };
+    const chip = (color) => ({
+      font: '600 8.5px/1 ' + mono, letterSpacing: '0.8px', padding: '3px 6px',
+      borderRadius: '4px', whiteSpace: 'nowrap', background: color + (LIGHT ? '26' : '1F'), color: ck(color),
+    });
+
+    // chain svg
+    const hot = {};
+    s.pulses.forEach((p) => { hot[p.edge] = p.color; });
+    const baseStroke = s.killed ? 'rgba(255,107,107,0.30)' : P.baseStroke;
+    const baseDash = s.killed ? '3 6' : undefined;
+    const edge = (k, dash) => e('path', { key: k, d: this.PATHS[k], fill: 'none', stroke: baseStroke, strokeWidth: 1.5, strokeDasharray: dash || baseDash });
+    const hotEdge = (k) => hot[k] ? e('path', { key: k + 'h', d: this.PATHS[k], fill: 'none', stroke: hot[k], strokeWidth: 1.5, opacity: 0.9, style: { filter: 'drop-shadow(0 0 6px ' + hot[k] + ')' } }) : null;
+    const endDot = (x, y, i) => e('circle', { key: 'd' + i, cx: x, cy: y, r: 2.5, fill: s.killed ? 'rgba(255,107,107,0.4)' : P.endDot });
+    const chainSvg = e('svg', { width: 660, height: 704, viewBox: '0 0 660 704', style: { position: 'absolute', left: 0, top: 0, zIndex: 1, overflow: 'visible' } },
+      edge('ug'), edge('gr'), edge('rs'), edge('gx', '3 6'),
+      hotEdge('ug'), hotEdge('gr'), hotEdge('rs'),
+      endDot(330, 128, 0), endDot(330, 192, 1), endDot(330, 324, 2), endDot(180, 400, 3), endDot(180, 524, 4), endDot(180, 584, 5), endDot(500, 400, 6)
+    );
+
+    const pulses = s.pulses.map((p) => ({
+      id: p.id,
+      style: {
+        position: 'absolute', left: '0px', top: '0px', width: '10px', height: '10px', borderRadius: '50%',
+        background: p.color, boxShadow: '0 0 14px 3px ' + p.color + '66',
+        offsetPath: 'path("' + this.PATHS[p.edge] + '")', offsetRotate: '0deg',
+        animation: 'pulseMove 1.3s ease-in-out forwards', zIndex: 3, pointerEvents: 'none',
+      },
+    }));
+
+    // budget ring
+    const frac = Math.min(1, s.budgetSpent / s.weekBudget);
+    const circ = 2 * Math.PI * 44;
+    const budgetRing = e('svg', { width: 104, height: 104, viewBox: '0 0 104 104' },
+      e('circle', { cx: 52, cy: 52, r: 44, fill: 'none', stroke: P.track, strokeWidth: 7 }),
+      e('circle', { cx: 52, cy: 52, r: 44, fill: 'none', stroke: ck('#F2B544'), strokeWidth: 7, strokeLinecap: 'round', strokeDasharray: circ, strokeDashoffset: circ * frac, transform: 'rotate(-90 52 52)', style: { transition: 'stroke-dashoffset 0.8s ease' } })
+    );
+
+    // relay stepper
+    const lastLabel = s.relay.failed ? 'REVERTED' : 'CONFIRMED';
+    const RL = ['getCapabilities', 'estimate7710', 'send7710', 'webhook ✓', lastLabel];
+    const relaySteps = RL.map((label, i) => {
+      const st = {
+        font: '600 9.5px/1 ' + mono, letterSpacing: '0.6px', padding: '7px 10px', borderRadius: '7px',
+        border: '1px solid ' + P.stepBorder, color: P.stepIdle, whiteSpace: 'nowrap',
+      };
+      if (s.relay.active) {
+        const done = i < s.relay.step || (i === 4 && s.relay.step === 4);
+        if (done) {
+          if (i === 4 && s.relay.failed) { st.color = ck('#FF6B6B'); st.border = '1px solid rgba(255,107,107,0.45)'; st.background = 'rgba(255,107,107,0.08)'; }
+          else { st.color = ck('#5CE0A1'); st.border = '1px solid rgba(92,224,161,0.35)'; st.background = 'rgba(92,224,161,0.06)'; }
+        } else if (i === s.relay.step) {
+          st.color = ck('#F2B544'); st.border = '1px solid rgba(242,181,68,0.5)'; st.background = 'rgba(242,181,68,0.08)'; st.animation = 'stepBlink 1s ease-in-out infinite';
+        }
+      }
+      return { label, style: st, sep: i < 4 ? '→' : '' };
+    });
+    const relayTask = s.relay.taskId ? 'TASK ' + s.relay.taskId : 'TASK —';
+    const relayNote = !s.relay.active
+      ? 'idle — capabilities cached · acceptedTokens [USDC] · webhook listener armed · Ed25519 verify on'
+      : (s.relay.step < 4
+        ? 'relaying… fee ' + s.relay.fee + ' USDC · chainId 8453 · fresh salt · destinationUrl webhook armed'
+        : (s.relay.failed
+          ? 'reverted at redemption · spendLimit enforcer: 7.50 > 5.00 · reason + caveat logged immutably'
+          : 'confirmed · webhook verified (Ed25519 vs JWKS) · fee ' + s.relay.fee + ' USDC settled'));
+
+    // venice
+    const AC = { governor: '#F2B544', researcher: '#62D9E8', summarizer: '#B89BFF' };
+    const thinkChip = s.thinkActor ? chip(AC[s.thinkActor] || '#9A9588') : Object.assign(chip('#79756A'), { background: LIGHT ? 'rgba(28,24,16,0.05)' : 'rgba(255,255,255,0.06)', color: P.beatText });
+    const thinkActorName = s.thinkActor ? s.thinkActor.toUpperCase() : 'STANDBY';
+    const thinkText = s.thinkActor ? s.thinkFull.slice(0, s.thinkLen) : '// reasoning stream idle · venice ready · zero retention — your strategy is not trained on';
+
+    // log
+    const logItems = s.log.map((en) => ({
+      ts: en.ts, actor: en.actor, action: en.action, detail: en.detail,
+      cost: en.cost ? '−' + en.cost : '', hash: en.hash || '',
+      chip: chip(this.COLORS[en.actor] || '#9A9588'),
+      actionStyle: { font: '600 9.5px/1 ' + mono, letterSpacing: '1px', color: en.bad ? ck('#FF6B6B') : P.action },
+    }));
+
+    // proposals
+    const proposals = s.proposals.map((p) => ({
+      id: p.id, title: p.title, rule: p.rule,
+      voteTxt: p.pending ? 'REASONING…' : 'VOTED ' + p.vote,
+      voteChip: p.pending
+        ? Object.assign(chip('#F2B544'), { animation: 'dotPulse 1.2s ease-in-out infinite' })
+        : chip(p.vote === 'YES' ? '#5CE0A1' : '#FF6B6B'),
+      barStyle: { width: p.forPct + '%', height: '5px', background: ck('#5CE0A1'), transition: 'width 1.1s ease' },
+      forTxt: p.pending ? '—' : p.forPct + '%',
+      agTxt: p.pending ? '—' : (100 - p.forPct) + '%',
+      hash: p.hash,
+    }));
+
+    // selected detail
+    const rem = (s.weekBudget - s.budgetSpent).toFixed(2);
+    const KCOL = { HARD: '#5CE0A1', SOFT: '#B89BFF', CHAIN: '#F2B544', ROOT: '#C9C4B6' };
+    const INFO = {
+      user: {
+        name: 'USER SA', addr: '0x8fA3…c21B', parent: '— root of trust', scope: 'full account authority', budget: '120 USDC held',
+        checks: ['EIP-7702 upgrade relayed by 1Shot', 'issued root delegation → Governor', 'can revoke → entire subtree dies (cascade)'],
+        caveats: [
+          { kind: 'ROOT', t: 'no caveats — you are the source of authority' },
+          { kind: 'HARD', t: 'delegation to Governor carries all 6 rules' },
+        ],
+      },
+      governor: {
+        name: 'GOVERNOR', addr: '0x51Ee…9D04', parent: 'USER SA (root delegation)', scope: 'transfer · castVote · x402 · spawn', budget: '10.00 / wk · ' + rem + ' remaining',
+        checks: ['delegation signed by USER SA', 'redeems via DelegationManager.redeemDelegations'],
+        caveats: [
+          { kind: 'HARD', t: 'erc20PeriodTransfer · ≤ 10 USDC / 7 days' },
+          { kind: 'HARD', t: 'spendLimit · ≤ 5 USDC per action' },
+          { kind: 'HARD', t: 'allowedTargets · [governor, aerodrome, dexmetrics, venice]' },
+          { kind: 'HARD', t: 'timestamp · valid Mon 00:00 → Sun 23:59' },
+          { kind: 'SOFT', t: '“prefer free sources first” → system prompt' },
+          { kind: 'CHAIN', t: 'may redelegate — strictly narrower only' },
+        ],
+      },
+      researcher: {
+        name: 'RESEARCHER', addr: '0x9bC4…77Aa', parent: 'GOVERNOR SA (redelegation)', scope: 'read + web fetch · x402 pay', budget: '≤ 20% of parent remaining',
+        checks: ['chain [root → governor → researcher] verified', 'child ⊂ parent at every hop'],
+        caveats: [
+          { kind: 'HARD', t: 'allowedMethods · [httpGet, x402Pay]' },
+          { kind: 'HARD', t: 'budget slice · ≤ 20% of parent remaining' },
+          { kind: 'HARD', t: 'allowedTargets ⊂ parent allowlist' },
+          { kind: 'CHAIN', t: 'may redelegate text-only · one hop max' },
+        ],
+      },
+      summarizer: {
+        name: 'SUMMARIZER', addr: '0x2F61…E3c9', parent: 'RESEARCHER SA (redelegation)', scope: 'text in → text out', budget: '0 USDC',
+        checks: ['chain [root → gov → res → sum] redeemable', 'cannot exceed any ancestor — enforced'],
+        caveats: [
+          { kind: 'HARD', t: 'no spend — budget 0' },
+          { kind: 'HARD', t: 'no external calls — text-only' },
+          { kind: 'CHAIN', t: 'leaf — cannot redelegate (depth 2)' },
+        ],
+      },
+    };
+    const sel = s.selected ? INFO[s.selected] : null;
+    const selCaveats = sel ? sel.caveats.map((c) => ({ kind: c.kind, t: c.t, chip: chip(KCOL[c.kind]) })) : [];
+
+    const cs = s.clearSign || {};
+
+    // buttons
+    const demoBtnStyle = Object.assign({
+      font: "600 11px/1 'Sora',sans-serif", padding: '11px 16px', borderRadius: '9px',
+      letterSpacing: '0.4px', userSelect: 'none', whiteSpace: 'nowrap', transition: 'all 0.25s ease',
+    }, busy
+      ? { background: 'rgba(242,181,68,0.1)', color: '#F2B544', border: '1px solid rgba(242,181,68,0.4)', cursor: 'default' }
+      : { background: '#F2B544', color: '#0B0E15', border: '1px solid #F2B544', cursor: 'pointer', boxShadow: '0 4px 22px rgba(242,181,68,0.28)' });
+    const beatBtn = {
+      font: '600 9.5px/1 ' + mono, letterSpacing: '1px', padding: '10px 13px', borderRadius: '8px',
+      border: '1px solid ' + P.beatBorder, color: P.beatText, cursor: 'pointer',
+      userSelect: 'none', whiteSpace: 'nowrap', transition: 'all 0.2s ease', opacity: busy ? 0.45 : 1,
+    };
+    const killBtnStyle = Object.assign({}, beatBtn, s.killed
+      ? { border: '1px solid rgba(92,224,161,0.5)', color: ck('#5CE0A1'), background: 'rgba(92,224,161,0.07)', opacity: 1 }
+      : { border: '1px solid rgba(255,107,107,0.35)', color: ck('#FF8FA3') });
+    const themeToggleStyle = {
+      font: '500 10px/1 ' + mono, letterSpacing: '0.5px', color: 'var(--t-muted)',
+      padding: '8px 11px', border: '1px solid var(--line2)', borderRadius: '8px',
+      cursor: 'pointer', userSelect: 'none', whiteSpace: 'nowrap', transition: 'all 0.2s ease',
+      display: 'flex', alignItems: 'center', gap: '6px',
+    };
+    const themeToggleLabel = LIGHT ? '☾ DARK' : '☀ LIGHT';
+
+    // chain badge
+    const chainBadgeStyle = {
+      display: 'flex', alignItems: 'center', gap: '6px', font: '500 9.5px/1 ' + mono,
+      color: s.killed ? ck('#FF6B6B') : ck('#5CE0A1'), padding: '7px 10px', borderRadius: '7px',
+      border: '1px solid ' + (s.killed ? 'rgba(255,107,107,0.4)' : 'rgba(92,224,161,0.25)'),
+      background: s.killed ? 'rgba(255,107,107,0.06)' : 'rgba(92,224,161,0.04)',
+    };
+    const chainBadgeDot = {
+      width: '6px', height: '6px', borderRadius: '50%', display: 'inline-block',
+      background: s.killed ? '#FF6B6B' : '#5CE0A1',
+      animation: s.killed ? 'none' : 'dotPulse 1.8s ease-in-out infinite',
+    };
+
+    return {
+      // hero
+      heroCanvasRef: (el) => { this._heroCanvas = el; if (el && this._timers && !this._net) this.initNet(el); },
+      dashRef: (el) => { this._dash = el; },
+      scrollDash: () => this.scrollDash(),
+      heroDemo: () => this.heroDemo(),
+      // header
+      runDemo: () => this.startDemo(),
+      demoLabel: busy ? '◉ SCENARIO RUNNING…' : '▶ RUN DEMO SCENARIO',
+      demoBtnStyle, beatBtn, killBtnStyle,
+      theme: s.theme, toggleTheme: () => this.toggleTheme(),
+      themeToggleStyle, themeToggleLabel,
+      killLabel: s.killed ? '⏻ RESTORE ROOT' : '⏻ KILL SWITCH',
+      voteBeat: () => this.voteBeat(),
+      unsafeBeat: () => this.unsafeBeat(),
+      killBeat: () => this.killBeat(),
+      budgetRemaining: rem,
+      budgetSpentTxt: s.budgetSpent.toFixed(2),
+      x402Count: s.x402Count, txCount: s.txCount,
+      // voice
+      voice: s.voice, voiceId: s.voiceId,
+      // chain
+      chainSvg, pulses, budgetRing,
+      chainBadge: s.killed ? 'REVOKED · SUBTREE DEAD' : 'DEPTH 2 · LIVE',
+      chainBadgeStyle, chainBadgeDot,
+      selectUser: () => this.setState({ selected: s.selected === 'user' ? null : 'user' }),
+      selectGovernor: () => this.setState({ selected: s.selected === 'governor' ? null : 'governor' }),
+      selectResearcher: () => this.setState({ selected: s.selected === 'researcher' ? null : 'researcher' }),
+      selectSummarizer: () => this.setState({ selected: s.selected === 'summarizer' ? null : 'summarizer' }),
+      closeSelect: () => this.setState({ selected: null }),
+      userRing: ring('user', ck('#EAE7DE')), govRing: ring('governor', '#F2B544'),
+      resRing: ring('researcher', '#62D9E8'), sumRing: ring('summarizer', '#B89BFF'),
+      userDotStyle: dot('user', ck('#EAE7DE')), govDotStyle: dot('governor', '#F2B544'),
+      resDotStyle: dot('researcher', '#62D9E8'), sumDotStyle: dot('summarizer', '#B89BFF'),
+      userStatus: s.agents.user.status, govStatus: s.agents.governor.status,
+      resStatus: s.agents.researcher.status, sumStatus: s.agents.summarizer.status,
+      // governance
+      proposals,
+      // detail
+      selOpen: !!sel,
+      selName: sel ? sel.name : '', selAddr: sel ? sel.addr : '', selParent: sel ? sel.parent : '',
+      selScope: sel ? sel.scope : '', selBudget: sel ? sel.budget : '',
+      selChecks: sel ? sel.checks : [], selCaveats,
+      // relay
+      relaySteps, relayTask, relayNote,
+      // venice
+      thinkChip, thinkActorName, thinkText,
+      // memory
+      logItems, logCount: String(s.log.length),
+      // clearsign
+      clearSignOpen: !!s.clearSign,
+      clearTrigger: cs.trigger || '', clearTitle: cs.title || '',
+      clearEnforced: cs.enforced || [], clearSoft: cs.soft || [], clearReasoning: cs.reasoning || [],
+      clearCost: cs.cost || '', clearAfter: cs.after || '',
+      proceed: () => this.proceed(), override: () => this.override(), editRules: () => this.editRules(),
+    };
+  }
+}
+</script>
+</body>
+</html>
